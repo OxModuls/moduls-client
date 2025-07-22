@@ -1,0 +1,761 @@
+import { Input } from "@/components/ui/input";
+import { Slider } from "@/components/ui/slider";
+import { Textarea } from "@/components/ui/textarea";
+import {
+  ArrowRight,
+  ChevronUp,
+  File,
+  Image,
+  Info,
+  Link,
+  Wallet,
+} from "lucide-react";
+import React, { useRef, useState } from "react";
+import { toast } from "sonner";
+import SeiIcon from "@/components/sei-icon";
+
+interface AgentForm {
+  agentName: string;
+  agentPrompt: string;
+  agentImage?: File;
+  modulType: string;
+  tokenSymbol: string;
+  totalSupply: number;
+  tax: {
+    swap: number;
+    agentWallet: number;
+    devWallet: number;
+  };
+  socialLinks: {
+    website?: string;
+    x?: string;
+    telegram?: string;
+  };
+  prebuyAmount: number;
+}
+
+const modulTypes = [
+  {
+    name: "GameFi NPC",
+    emoji: "🎮",
+    description: "Onchain AI that responds in-chat and via gameplay.",
+    identifier: "gamefi-npc",
+  },
+  {
+    name: "DeFAI",
+    emoji: "🧠",
+    description: "Scan, snipe execute — fully autonomous, fully aligned",
+    identifier: "defai",
+  },
+  {
+    name: "Meme Token",
+    emoji: "💸",
+    description: "Mint, hype, moon — launch fully memetic, fully chaotic.",
+    identifier: "meme-token-launcher",
+  },
+  {
+    name: "Oracle Feed",
+    emoji: "🔮",
+    description: "Pulls and verifies external data onchain.",
+    identifier: "oracle-feed",
+  },
+  {
+    name: "Custom Logic",
+    emoji: "🛠",
+    description: "Paste or upload a .goat.json to define custom behavior.",
+    identifier: "custom",
+  },
+];
+
+const acceptedImageFormats = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/gif",
+];
+const maxImageSize = 5 * 1024 * 1024;
+
+const CreateAgent = () => {
+  const pickModulDivRef = useRef<HTMLDivElement>(null);
+  const taxSettingsDivRef = useRef<HTMLDivElement>(null);
+  const prebuyDivRef = useRef<HTMLDivElement>(null);
+  const finalReviewDivRef = useRef<HTMLDivElement>(null);
+
+  const [showSocialLinks, setShowSocialLinks] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
+
+  const [formData, setFormData] = useState<AgentForm>({
+    agentName: "",
+    agentPrompt: "",
+    modulType: modulTypes[0].identifier,
+    tokenSymbol: "",
+    totalSupply: 1_000_000_000,
+    tax: {
+      swap: 1,
+      agentWallet: 100,
+      devWallet: 0,
+    },
+    socialLinks: {
+      website: "",
+      x: "",
+      telegram: "",
+    },
+    prebuyAmount: 0,
+  });
+  const [agentImageUrl, setAgentImageURL] = useState<string | undefined>();
+
+  const handleFormChange = (
+    e:
+      | React.ChangeEvent<HTMLInputElement>
+      | React.ChangeEvent<HTMLTextAreaElement>,
+  ) => {
+    const { name, value } = e.target;
+    if (name === "agentImage") {
+      const file = (e as React.ChangeEvent<HTMLInputElement>).target.files![0];
+
+      if (
+        file &&
+        acceptedImageFormats.includes(file.type) &&
+        file.size < maxImageSize
+      ) {
+        setFormData((prev) => ({
+          ...prev,
+          agentImage: { ...file },
+        }));
+        setSelectedFileName(file.name);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAgentImageURL(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+        toast.success("Added image successfully");
+      }
+    }
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) {
+      const file = e.dataTransfer.files[0];
+      if (
+        file &&
+        acceptedImageFormats.includes(file.type) &&
+        file.size < maxImageSize
+      ) {
+        setFormData((prev) => ({ ...prev, agentImage: file }));
+        setSelectedFileName(file.name);
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          setAgentImageURL(reader.result as string);
+        };
+        reader.readAsDataURL(file);
+        toast.success("Added image successfully");
+      }
+    }
+  };
+
+  const submitForm = (e: React.FormEvent) => {
+    e.preventDefault();
+  };
+
+  return (
+    <div className="px-6 pt-4 pb-12 flex flex-col">
+      <div className="max-w-lg mx-auto">
+        <div className="ml-1">
+          <h1 className="text-2xl font-bold">Launch Your Agent</h1>
+          <p className="mt-1 text-lg text-muted-foreground">
+            Plug logic into the chain. Give it a name. Let it cook.
+          </p>
+        </div>
+
+        <form onSubmit={submitForm} className="">
+          <div className="flex flex-col gap-5 mt-4 px-4 py-6 border rounded-xl">
+            <div className="ml-1">
+              <h2 className="text-xl font-semibold">Agent Identity</h2>
+              <p className="text-muted-foreground">
+                Give your agent a face and identity.
+              </p>
+            </div>
+
+            <div className="flex flex-col md:flex-row gap-5">
+              <div className="flex-1">
+                <label htmlFor="agent-name" className="ml-1">
+                  Agent Name
+                </label>
+                <Input
+                  id="agent-name"
+                  name="agentName"
+                  placeholder="Name your Agent. Go wild"
+                  className="mt-1"
+                  value={formData.agentName}
+                  onChange={handleFormChange}
+                />
+              </div>
+              <div className="flex-1">
+                <label htmlFor="token-symbol" className="ml-1">
+                  Token Symbol
+                </label>
+                <Input
+                  id="token-symbol"
+                  name="tokenSymbol"
+                  placeholder="Ticker for your token, like $MOD"
+                  className="mt-1"
+                  maxLength={5}
+                  value={formData.tokenSymbol}
+                  onChange={handleFormChange}
+                />
+              </div>
+            </div>
+            <div className="">
+              <label htmlFor="agent-prompt" className="ml-1">
+                Agent Description/Prompt
+              </label>
+              <Textarea
+                id="agent-prompt"
+                name="agentPrompt"
+                placeholder="A degen AI that hypes launches, roasts rugs, and protects LPs."
+                className="mt-2"
+                value={formData.agentPrompt}
+                onChange={handleFormChange}
+              />
+              <p className="ml-1 mt-1 text-xs text-muted-foreground">
+                Set the tone. Define the agent’s behavior or chat style.
+              </p>
+            </div>
+
+            <div>
+              <div className="ml-1 mt-5 flex items-center gap-2">
+                <Link className="size-4" />
+                <p>
+                  add social links{" "}
+                  <span className="text-muted-foreground">(optional)</span>
+                </p>
+                <button
+                  type="button"
+                  onClick={() => setShowSocialLinks(!showSocialLinks)}
+                  className="cursor-pointer"
+                >
+                  <ChevronUp
+                    className={`size-4 ${showSocialLinks ? "rotate-180" : ""}`}
+                  />
+                </button>
+              </div>
+              <div
+                className={`mt-3 flex flex-col gap-5 ${showSocialLinks ? "hidden" : "flex"}`}
+              >
+                <div>
+                  <label htmlFor="website" className="ml-1">
+                    Website
+                  </label>
+                  <Input
+                    id="website"
+                    name="website"
+                    placeholder="Enter URL"
+                    className="mt-1"
+                    value={formData.socialLinks.website}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialLinks: {
+                          ...prev.socialLinks,
+                          website: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="">
+                  <label htmlFor="x-url" className="ml-1">
+                    X
+                  </label>
+                  <Input
+                    id="x-url"
+                    name="x"
+                    placeholder="Enter URL"
+                    className="mt-1"
+                    value={formData.socialLinks.x}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialLinks: {
+                          ...prev.socialLinks,
+                          x: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+                <div className="">
+                  <label htmlFor="telegram" className="ml-1">
+                    Telegram
+                  </label>
+                  <Input
+                    id="telegram"
+                    name="telegram"
+                    placeholder="Enter URL"
+                    className="mt-1"
+                    value={formData.socialLinks.telegram}
+                    onChange={(e) => {
+                      setFormData((prev) => ({
+                        ...prev,
+                        socialLinks: {
+                          ...prev.socialLinks,
+                          telegram: e.target.value,
+                        },
+                      }));
+                    }}
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="mt-10">
+              <label
+                htmlFor="agent-image"
+                className="h-64 border-2 border-dotted rounded-lg flex justify-center items-center"
+                onDragOver={handleDragOver}
+                onDrop={handleDrop}
+              >
+                <div className="flex flex-col items-center">
+                  {formData.agentImage ? (
+                    <>
+                      <img
+                        src={agentImageUrl}
+                        alt="agent image"
+                        className="size-24 object-cover"
+                      />
+                      <p className="mt-2">selected file: {selectedFileName}</p>
+                      <span className="font-light">tap/click to change</span>
+                    </>
+                  ) : (
+                    <>
+                      <Image className="size-10" />
+                      <p className="mt-2">select an image to upload</p>
+                      <span className="font-light">or drag and drop here</span>
+                    </>
+                  )}
+                </div>
+                <input
+                  type="file"
+                  id="agent-image"
+                  name="agentImage"
+                  className="sr-only"
+                  onChange={handleFormChange}
+                />
+              </label>
+              <div className="mt-5 ml-2">
+                <div className="flex items-center gap-2">
+                  <File className="size-5" />
+                  <h3 className="font-semibold">File size and type</h3>
+                </div>
+                <ul className="mt-1 ml-1 list-disc list-inside text-sm font-light">
+                  <li>Max. size 5MB.</li>
+                  <li>JPG, GIF, and PNG formats.</li>
+                </ul>
+              </div>
+            </div>
+
+            <div className="">
+              <label htmlFor="total-supply" className="ml-1">
+                Total Supply
+              </label>
+              <Input
+                id="total-supply"
+                placeholder="Fixed supply baked in at launch"
+                className="mt-1"
+                value={"1B"}
+                disabled
+              />
+            </div>
+            <div className="mt-2 flex justify-end">
+              <button
+                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                onClick={() =>
+                  pickModulDivRef.current &&
+                  pickModulDivRef.current.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                <ArrowRight className="size-5" />
+                <span>Next</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={pickModulDivRef}
+            className="flex flex-col gap-5 mt-4 px-4 py-6 border rounded-xl"
+          >
+            <div className="ml-1">
+              <h2 className="text-xl font-semibold">Pick a Modul</h2>
+              <p className="text-muted-foreground">
+                Choose your agent's core logic.
+              </p>
+            </div>
+            <div className="grid grid-cols-1 md:grid-cols2 gap-3">
+              {modulTypes.map((modulType, idx) => {
+                // only first 2 are enabled
+                const disabled = idx > 2;
+                return (
+                  <div key={idx} className="flex flex-col">
+                    <label
+                      htmlFor={modulType.identifier}
+                      className={`p-3 border rounded-lg cursor-pointer ${formData.modulType === modulType.identifier ? "border-accent bg-red-950" : "bg-primary-foreground"} aria-disabled:cursor-not-allowed aria-disabled:opacity-60`}
+                      aria-disabled={disabled}
+                    >
+                      <p className="font-semibold flex gap-2">
+                        <span>{modulType.emoji}</span>{" "}
+                        <span>{modulType.name}</span>
+                        {disabled && (
+                          <span className="text-muted-foreground">(Soon)</span>
+                        )}
+                      </p>
+                      <p className="mt-0.5 text-sm text-muted-foreground font-light">
+                        {modulType.description}
+                      </p>
+                    </label>
+                    <input
+                      type="radio"
+                      id={modulType.identifier}
+                      name="modulType"
+                      value={modulType.identifier}
+                      className="sr-only"
+                      onChange={handleFormChange}
+                      disabled={disabled}
+                    />
+                  </div>
+                );
+              })}
+            </div>
+            <div className="mt-2 flex justify-end">
+              <button
+                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                onClick={() =>
+                  taxSettingsDivRef.current &&
+                  taxSettingsDivRef.current.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                <ArrowRight className="size-5" />
+                <span>Next</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={taxSettingsDivRef}
+            className="flex flex-col gap-5 mt-4 px-4 py-6 border rounded-xl"
+          >
+            <div className="ml-1">
+              <h2 className="text-xl font-semibold">Tax Settings</h2>
+              <p className="text-muted-foreground">
+                Fund your agent. Feed your dev. Or don't.
+              </p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-y-5">
+              <div className="">
+                <label
+                  htmlFor="swap-tax"
+                  className="flex items-center justify-between"
+                >
+                  <p className="">Total Swap Tax (%)</p>
+                  <span className="text-sm">{formData.tax.swap}%</span>
+                </label>
+                <div className="mt-2 flex flex-col gap-1.5 items-center">
+                  <Slider
+                    className=""
+                    rangeClassName="dark:bg-accent"
+                    thumbClassName="dark:border-accent"
+                    min={2}
+                    max={10}
+                    step={0.5}
+                    value={[formData.tax.swap]}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        tax: { ...formData.tax, swap: value[0] },
+                      })
+                    }
+                  />
+                  <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
+                    <span>2%</span>
+                    <span>10%</span>
+                  </div>
+                </div>
+                <p className="ml-1 mt-2 text-xs text-muted-foreground">
+                  Percentage fee taken on every swap.
+                </p>
+              </div>
+              <div className="">
+                <label
+                  htmlFor="agent-wallet"
+                  className="flex items-center justify-between"
+                >
+                  <p className="">Agent Wallet (%)</p>
+                  <span className="text-sm">{formData.tax.agentWallet}%</span>
+                </label>
+                <div className="mt-3 flex flex-col gap-1.5 items-center">
+                  <Slider
+                    className=""
+                    rangeClassName="dark:bg-accent"
+                    thumbClassName="dark:border-accent"
+                    min={1}
+                    max={100}
+                    step={1}
+                    value={[formData.tax.agentWallet]}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        tax: {
+                          ...formData.tax,
+                          agentWallet: value[0],
+                          devWallet: 100 - value[0],
+                        },
+                      })
+                    }
+                  />
+                  <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
+                    <span>1%</span>
+                    <span>100%</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Funds your agent's operations and memory.
+                </p>
+              </div>
+              <div className="">
+                <label
+                  htmlFor="agent-wallet"
+                  className="flex items-center justify-between"
+                >
+                  <p className="">
+                    Dev Wallet (%){" "}
+                    <span className="text-muted-foreground">(optional)</span>
+                  </p>
+                  <span className="text-sm">{formData.tax.devWallet}%</span>
+                </label>
+                <div className="mt-3 flex flex-col gap-1.5 items-center">
+                  <Slider
+                    className=""
+                    rangeClassName="dark:bg-accent"
+                    thumbClassName="dark:border-accent"
+                    min={0}
+                    max={99}
+                    step={1}
+                    value={[formData.tax.devWallet]}
+                    onValueChange={(value) =>
+                      setFormData({
+                        ...formData,
+                        tax: {
+                          ...formData.tax,
+                          devWallet: value[0],
+                          agentWallet: 100 - value[0],
+                        },
+                      })
+                    }
+                  />
+                  <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
+                    <span>0%</span>
+                    <span>99%</span>
+                  </div>
+                </div>
+                <p className="mt-2 text-xs text-muted-foreground">
+                  Kickback for builders, community, or vibes.
+                </p>
+              </div>
+            </div>
+            <div className="mt-2 flex justify-end">
+              <button
+                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                onClick={() =>
+                  prebuyDivRef.current &&
+                  prebuyDivRef.current.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                <ArrowRight className="size-5" />
+                <span>Next</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={prebuyDivRef}
+            className="flex flex-col mt-4 px-4 py-6 border rounded-xl"
+          >
+            <div className="ml-1">
+              <h2 className="text-xl font-semibold">Pre-buy Token</h2>
+              <p className="text-muted-foreground">
+                Purchasing a small amount of your token is optional but can help
+                protect your coin from snipers.
+              </p>
+            </div>
+
+            <div className="mt-3 px-2 py-4 bg-neutral-850 border rounded-lg flex flex-col gap-4">
+              <div className="w-full flex flex-col gap-1">
+                <label
+                  htmlFor="slippage"
+                  className="ml-1 text-sm font-semibold"
+                >
+                  Slippage (%)
+                </label>
+                <Input
+                  type="number"
+                  id="slippage"
+                  className="py-2"
+                  value={formData.prebuyAmount}
+                  onChange={handleFormChange}
+                />
+              </div>
+              <div className="w-full flex flex-col gap-1">
+                <label htmlFor="amount" className="ml-1 text-sm font-semibold">
+                  Amount
+                </label>
+                <div className="relative">
+                  <Input
+                    type="number"
+                    id="amount"
+                    name="prebuyAmount"
+                    className="py-2 pr-28"
+                    defaultValue={0}
+                  />
+                  <div className="absolute top-[50%] translate-y-[-50%] right-4 flex items-center gap-2 text-neutral-400">
+                    <div className="flex items-center gap-2">
+                      <span className="uppercase">sei</span>
+                      <SeiIcon className="size-4" />
+                    </div>
+                  </div>
+                </div>
+                <div className="px-1 w-full flex justify-between text-xs">
+                  <span className="text-red-500">Insufficient balance</span>
+                  <div className="flex items-center gap-1">
+                    <Wallet className="size-3" />
+                    <span className="">0 SEI</span>
+                    <button className="text-green-500">MAX</button>
+                  </div>
+                </div>
+                <div className="w-full px-1 mt-2 text-xs text-muted-foreground flex justify-between items-center">
+                  <div className="flex items-center gap-2">
+                    <span>Creation Fee</span>
+                    <Info className="size-3.5" />
+                  </div>
+                  <span>30 SEI</span>
+                </div>
+                <div className="ml-1 w-full">
+                  <p className="mt-1.25 text-neutral-400 text-xs">
+                    You will receive <span>1,000,000</span> SeiShare
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end">
+              <button
+                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                onClick={() =>
+                  finalReviewDivRef.current &&
+                  finalReviewDivRef.current.scrollIntoView({
+                    behavior: "smooth",
+                  })
+                }
+              >
+                <ArrowRight className="size-5" />
+                <span>Next</span>
+              </button>
+            </div>
+          </div>
+
+          <div
+            ref={finalReviewDivRef}
+            className="flex flex-col mt-4 px-4 py-6 border rounded-xl"
+          >
+            <div className="ml-1">
+              <h2 className="text-xl font-semibold">Review</h2>
+              <p className="text-muted-foreground">
+                Ship it. The chain awaits.
+              </p>
+            </div>
+
+            <div className="w-full h-0.5 my-3 bg-border" />
+
+            <div className="ml-1">
+              <h3 className="text-lg font-medium">Summary</h3>
+              <div className="mt-10 flex flex-col items-center">
+                {agentImageUrl ? (
+                  <img
+                    src={agentImageUrl}
+                    alt="token image"
+                    className="size-32 border border-neutral-300 rounded-full object-cover"
+                  />
+                ) : (
+                  <div className="size-32 border border-neutral-300 rounded-full text-xs flex items-center justify-center">
+                    <div className="text-center px-3">
+                      Select agent image to preview
+                    </div>
+                  </div>
+                )}
+                <p className="mt-3">Token Image (Max 5MB)</p>
+              </div>
+
+              <div className="">
+                <p className="">Agent Name:</p>
+                <span className="">{formData.agentName}</span>
+
+                <p className="">Symbol:</p>
+                <span className="">${formData.tokenSymbol.toUpperCase()}</span>
+
+                <p className="">Total Supply:</p>
+                <span className="">
+                  {formData.totalSupply.toLocaleString()}
+                </span>
+
+                <p className="">Modul Type:</p>
+                <span className="">
+                  {
+                    modulTypes.find((m) => m.identifier === formData.modulType)
+                      ?.name
+                  }
+                </span>
+
+                <p className="">Swap Tax:</p>
+                <span className="">{formData.tax.swap}%</span>
+
+                <p className="">Agent Wallet:</p>
+                <span className="">{formData.tax.agentWallet}%</span>
+
+                <p className="">Dev Wallet:</p>
+                <span className="">{formData.tax.devWallet}%</span>
+
+                {/*<p className="">Custom Logic:</p>
+                <span className="">
+                  {formData.modulType === "custom" ? "Yes" : "No"}
+                </span>*/}
+              </div>
+            </div>
+            <div className="mt-4 flex justify-end gap-2">
+              <button
+                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 text-center"
+                onClick={() => {}}
+              >
+                Launch Agent
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+};
+
+export default CreateAgent;
