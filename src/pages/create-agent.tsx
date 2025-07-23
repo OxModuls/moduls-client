@@ -79,7 +79,7 @@ const CreateAgent = () => {
   const pickModulDivRef = useRef<HTMLDivElement>(null);
   const taxSettingsDivRef = useRef<HTMLDivElement>(null);
   const prebuyDivRef = useRef<HTMLDivElement>(null);
-  const finalReviewDivRef = useRef<HTMLDivElement>(null);
+  // const finalReviewDivRef = useRef<HTMLDivElement>(null);
 
   const [showSocialLinks, setShowSocialLinks] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
@@ -91,9 +91,9 @@ const CreateAgent = () => {
     tokenSymbol: "",
     totalSupply: 1_000_000_000,
     tax: {
-      swap: 1,
-      agentWallet: 100,
-      devWallet: 0,
+      swap: 2,
+      agentWallet: 50,
+      devWallet: 50,
     },
     socialLinks: {
       website: "",
@@ -487,6 +487,7 @@ const CreateAgent = () => {
                         tax: { ...formData.tax, swap: value[0] },
                       })
                     }
+                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>2%</span>
@@ -524,6 +525,7 @@ const CreateAgent = () => {
                         },
                       })
                     }
+                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>1%</span>
@@ -564,6 +566,7 @@ const CreateAgent = () => {
                         },
                       })
                     }
+                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>0%</span>
@@ -653,94 +656,14 @@ const CreateAgent = () => {
                   </div>
                   <span>30 SEI</span>
                 </div>
-                <div className="ml-1 w-full">
-                  <p className="mt-1.25 text-neutral-400 text-xs">
-                    You will receive <span>1,000,000</span> SeiShare
-                  </p>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 flex justify-end">
-              <button
-                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
-                onClick={() =>
-                  finalReviewDivRef.current &&
-                  finalReviewDivRef.current.scrollIntoView({
-                    behavior: "smooth",
-                  })
-                }
-              >
-                <ArrowRight className="size-5" />
-                <span>Next</span>
-              </button>
-            </div>
-          </div>
-
-          <div
-            ref={finalReviewDivRef}
-            className="flex flex-col mt-4 px-4 py-6 border rounded-xl"
-          >
-            <div className="ml-1">
-              <h2 className="text-xl font-semibold">Review</h2>
-              <p className="text-muted-foreground">
-                Ship it. The chain awaits.
-              </p>
-            </div>
-
-            <div className="w-full h-0.5 my-3 bg-border" />
-
-            <div className="ml-1">
-              <h3 className="text-lg font-medium">Summary</h3>
-              <div className="mt-10 flex flex-col items-center">
-                {agentImageUrl ? (
-                  <img
-                    src={agentImageUrl}
-                    alt="token image"
-                    className="size-32 border border-neutral-300 rounded-full object-cover"
-                  />
-                ) : (
-                  <div className="size-32 border border-neutral-300 rounded-full text-xs flex items-center justify-center">
-                    <div className="text-center px-3">
-                      Select agent image to preview
-                    </div>
+                {formData.tokenSymbol && (
+                  <div className="ml-1 w-full">
+                    <p className="mt-1.25 text-neutral-400 text-xs">
+                      You will receive <span>1,000,000</span>{" "}
+                      <span>${formData.tokenSymbol.toUpperCase()}</span>
+                    </p>
                   </div>
                 )}
-                <p className="mt-3">Token Image (Max 5MB)</p>
-              </div>
-
-              <div className="">
-                <p className="">Agent Name:</p>
-                <span className="">{formData.agentName}</span>
-
-                <p className="">Symbol:</p>
-                <span className="">${formData.tokenSymbol.toUpperCase()}</span>
-
-                <p className="">Total Supply:</p>
-                <span className="">
-                  {formData.totalSupply.toLocaleString()}
-                </span>
-
-                <p className="">Modul Type:</p>
-                <span className="">
-                  {
-                    modulTypes.find((m) => m.identifier === formData.modulType)
-                      ?.name
-                  }
-                </span>
-
-                <p className="">Swap Tax:</p>
-                <span className="">{formData.tax.swap}%</span>
-
-                <p className="">Agent Wallet:</p>
-                <span className="">{formData.tax.agentWallet}%</span>
-
-                <p className="">Dev Wallet:</p>
-                <span className="">{formData.tax.devWallet}%</span>
-
-                {/*<p className="">Custom Logic:</p>
-                <span className="">
-                  {formData.modulType === "custom" ? "Yes" : "No"}
-                </span>*/}
               </div>
             </div>
             <div className="mt-4 flex justify-end gap-2">
@@ -752,6 +675,85 @@ const CreateAgent = () => {
               </button>
             </div>
           </div>
+
+          {/*
+            <div
+              ref={finalReviewDivRef}
+              className="flex flex-col mt-4 px-4 py-6 border rounded-xl"
+            >
+              <div className="ml-1">
+                <h2 className="text-xl font-semibold">Review</h2>
+                <p className="text-muted-foreground">
+                  Ship it. The chain awaits.
+                </p>
+              </div>
+
+              <div className="w-full h-0.5 my-3 bg-border" />
+
+              <div className="ml-1">
+                <h3 className="text-lg font-medium">Summary</h3>
+                <div className="mt-10 flex flex-col items-center">
+                  {agentImageUrl ? (
+                    <img
+                      src={agentImageUrl}
+                      alt="token image"
+                      className="size-32 border border-neutral-300 rounded-full object-cover"
+                    />
+                  ) : (
+                    <div className="size-32 border border-neutral-300 rounded-full text-xs flex items-center justify-center">
+                      <div className="text-center px-3">
+                        Select agent image to preview
+                      </div>
+                    </div>
+                  )}
+                  <p className="mt-3">Token Image (Max 5MB)</p>
+                </div>
+
+                <div className="">
+                  <p className="">Agent Name:</p>
+                  <span className="">{formData.agentName}</span>
+
+                  <p className="">Symbol:</p>
+                  <span className="">${formData.tokenSymbol.toUpperCase()}</span>
+
+                  <p className="">Total Supply:</p>
+                  <span className="">
+                    {formData.totalSupply.toLocaleString()}
+                  </span>
+
+                  <p className="">Modul Type:</p>
+                  <span className="">
+                    {
+                      modulTypes.find((m) => m.identifier === formData.modulType)
+                        ?.name
+                    }
+                  </span>
+
+                  <p className="">Swap Tax:</p>
+                  <span className="">{formData.tax.swap}%</span>
+
+                  <p className="">Agent Wallet:</p>
+                  <span className="">{formData.tax.agentWallet}%</span>
+
+                  <p className="">Dev Wallet:</p>
+                  <span className="">{formData.tax.devWallet}%</span>
+
+                  <p className="">Custom Logic:</p>
+                  <span className="">
+                    {formData.modulType === "custom" ? "Yes" : "No"}
+                  </span>*
+                </div>
+              </div>
+              <div className="mt-4 flex justify-end gap-2">
+                <button
+                  className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 text-center"
+                  onClick={() => {}}
+                >
+                  Launch Agent
+                </button>
+              </div>
+            </div>
+          */}
         </form>
       </div>
     </div>
