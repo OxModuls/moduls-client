@@ -10,15 +10,16 @@ export function cn(...inputs: ClassValue[]) {
 
 export function ellipsizeAddress(
   address: string,
-  charsToKeep: number = 6,
+  charsAtStart: number = 6,
+  charsAtEnd: number = 6,
   ellipsis: string = "...",
 ): string {
-  if (address.length <= charsToKeep * 2 + ellipsis.length) {
+  if (address.length <= charsAtStart * 2 + ellipsis.length) {
     return address;
   }
 
-  const start = address.substring(0, charsToKeep);
-  const end = address.substring(address.length - charsToKeep);
+  const start = address.substring(0, charsAtStart);
+  const end = address.substring(address.length - charsAtEnd);
 
   return `${start}${ellipsis}${end}`;
 }

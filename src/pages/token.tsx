@@ -370,7 +370,7 @@ const Token = () => {
             <div className="w-auto px-4 py-3 bg-primary-foreground rounded-lg border flex items-center gap-2">
               <p>
                 Contract Address:{" "}
-                <span>{ellipsizeAddress(token.createdBy, 4)}</span>
+                <span>{ellipsizeAddress(token.createdBy, 4, 4)}</span>
               </p>
               <button
                 className="cursor-pointer"
@@ -660,7 +660,7 @@ const Token = () => {
                           </td>
                           <td className="flex items-center gap-2 font-mono">
                             <span>
-                              {ellipsizeAddress(transaction.account, 4)}
+                              {ellipsizeAddress(transaction.account, 4, 4)}
                             </span>
                             <a
                               href={`https://seitrace.com/address/${transaction.account}`}
