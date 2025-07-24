@@ -4,6 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowRight,
   ChevronUp,
+  Clipboard,
   File,
   Image,
   Info,
@@ -13,6 +14,7 @@ import {
 import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 import SeiIcon from "@/components/sei-icon";
+import { writeToClipboard } from "@/lib/utils";
 
 interface AgentForm {
   agentName: string;
@@ -103,6 +105,9 @@ const CreateAgent = () => {
     prebuyAmount: 0,
   });
   const [agentImageUrl, setAgentImageURL] = useState<string | undefined>();
+
+  const devWallet = "0x742d35Cc6634C05329C31a8fA823b65BdfE";
+  const agentWallet = "0x5A0bCC35AD8cE6CCB6980B8d0A6B23DDCA6";
 
   const handleFormChange = (
     e:
@@ -463,7 +468,7 @@ const CreateAgent = () => {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 gap-y-5">
+            <div className="flex flex-col gap-y-5">
               <div className="">
                 <label
                   htmlFor="swap-tax"
@@ -508,7 +513,7 @@ const CreateAgent = () => {
                 </label>
                 <div className="mt-3 flex flex-col gap-1.5 items-center">
                   <Slider
-                    className=""
+                    className="mt-2"
                     rangeClassName="dark:bg-accent"
                     thumbClassName="dark:border-accent"
                     min={1}
@@ -578,6 +583,41 @@ const CreateAgent = () => {
                 </p>
               </div>
             </div>
+
+            <div className="flex flex-col gap-5">
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <p className="">Dev Wallet</p>
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => writeToClipboard(devWallet)}
+                  >
+                    <Clipboard className="size-5" />
+                  </button>
+                </div>
+                <Input className="w-full mt-2" value={devWallet} disabled />
+                <div className="w-full mt-1 px-1 text-xs text-muted-foreground">
+                  Your wallet.
+                </div>
+              </div>
+
+              <div className="">
+                <div className="flex items-center justify-between">
+                  <p className="">Agent Wallet</p>
+                  <button
+                    className="cursor-pointer"
+                    onClick={() => writeToClipboard(agentWallet)}
+                  >
+                    <Clipboard className="size-5" />
+                  </button>
+                </div>
+                <Input className="w-full mt-2" value={agentWallet} disabled />
+                <div className="w-full mt-1 px-1 text-xs text-muted-foreground">
+                  Auto-generated wallet for your agent.
+                </div>
+              </div>
+            </div>
+
             <div className="mt-2 flex justify-end">
               <button
                 className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
