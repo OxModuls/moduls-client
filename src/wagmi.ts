@@ -1,6 +1,6 @@
 import { http, createConfig } from "wagmi";
 import { mainnet } from "wagmi/chains";
-import { injected } from "wagmi/connectors";
+import { metaMask } from "wagmi/connectors";
 
 // Sei Mainnet settings
 const seiMainnet = {
@@ -24,7 +24,7 @@ const seiTestnet = {
 
 export const config = createConfig({
   chains: [seiMainnet, seiTestnet],
-  connectors: [injected()],
+  connectors: [metaMask()],
   transports: {
     [seiMainnet.id]: http(),
     [seiTestnet.id]: http(),

@@ -5,6 +5,8 @@ import { Link } from "react-router";
 import { useLocation } from "react-router";
 import modulsLogo from "../assets/moduls-logo.svg";
 
+import ConnectWalletButton from "./connect-wallet-button";
+
 const Header = () => {
   const pathname = useLocation().pathname;
 
@@ -33,9 +35,7 @@ const Header = () => {
             />
             <Search className="size-4 absolute top-[50%] translate-y-[-50%] left-4" />
           </div>
-          <button className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105">
-            Connect
-          </button>
+          <ConnectWalletButton />
         </div>
       </div>
       {pathname === "/" && (
