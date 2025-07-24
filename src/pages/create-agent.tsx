@@ -15,6 +15,7 @@ import React, { useRef, useState } from "react";
 import { toast } from "sonner";
 import SeiIcon from "@/components/sei-icon";
 import { writeToClipboard } from "@/lib/utils";
+import { useAccount } from "wagmi";
 
 interface AgentForm {
   agentName: string;
@@ -78,6 +79,7 @@ const acceptedImageFormats = [
 const maxImageSize = 5 * 1024 * 1024;
 
 const CreateAgent = () => {
+  const { address } = useAccount();
   const pickModulDivRef = useRef<HTMLDivElement>(null);
   const taxSettingsDivRef = useRef<HTMLDivElement>(null);
   const prebuyDivRef = useRef<HTMLDivElement>(null);
@@ -106,7 +108,6 @@ const CreateAgent = () => {
   });
   const [agentImageUrl, setAgentImageURL] = useState<string | undefined>();
 
-  const devWallet = "0x742d35Cc6634C05329C31a8fA823b65BdfE";
   const agentWallet = "0x5A0bCC35AD8cE6CCB6980B8d0A6B23DDCA6";
 
   const handleFormChange = (
@@ -590,12 +591,20 @@ const CreateAgent = () => {
                   <p className="">Dev Wallet</p>
                   <button
                     className="cursor-pointer"
-                    onClick={() => writeToClipboard(devWallet)}
+                    onClick={() => {
+                      address
+                        ? writeToClipboard(address)
+                        : toast.error("Connect your wallet first");
+                    }}
                   >
                     <Copy className="size-5" />
                   </button>
                 </div>
-                <Input className="w-full mt-2" value={devWallet} disabled />
+                <Input
+                  className="w-full mt-2"
+                  value={address || "Connect wallet to add dev wallet"}
+                  disabled
+                />
                 <div className="w-full mt-1 px-1 text-xs text-muted-foreground">
                   Your wallet.
                 </div>
