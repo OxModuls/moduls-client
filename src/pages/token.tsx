@@ -25,8 +25,8 @@ import {
   ellipsizeAddress,
   formatISODate,
   getHumanReadableTimeAgo,
+  writeToClipboard,
 } from "@/lib/utils";
-import { toast } from "sonner";
 import { Input } from "@/components/ui/input";
 import SeiIcon from "@/components/sei-icon";
 
@@ -341,15 +341,6 @@ const Token = () => {
     tradeFees: 1.25,
   });
 
-  const writeToClipboard = async (text: string) => {
-    try {
-      await navigator.clipboard.writeText(text);
-      toast.success("Successfully copied to clipboard");
-    } catch (error: any) {
-      toast.error(error.message);
-    }
-  };
-
   return (
     <div className="w-full max-w-screen px-6 pt-4 pb-12 flex flex-col">
       <div className="w-full max-w-lg mx-auto">
@@ -618,7 +609,8 @@ const Token = () => {
                     </button>
                     <div className="mt-1.25 text-neutral-400 text-xs flex items-center justify-center">
                       <p>
-                        You will receive <span>1,000,000</span> {token.name.toUpperCase()}
+                        You will receive <span>1,000,000</span>{" "}
+                        {token.name.toUpperCase()}
                       </p>
                     </div>
                   </div>

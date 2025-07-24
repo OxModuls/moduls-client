@@ -2,6 +2,7 @@ import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
 import { formatDistanceToNow, parseISO } from "date-fns";
 import { enGB } from "date-fns/locale";
+import { toast } from "sonner";
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -47,3 +48,12 @@ export function getHumanReadableTimeAgo(
     locale: locale,
   });
 }
+
+export const writeToClipboard = async (text: string) => {
+  try {
+    await navigator.clipboard.writeText(text);
+    toast.success("Successfully copied to clipboard");
+  } catch (error: any) {
+    toast.error(error.message);
+  }
+};
