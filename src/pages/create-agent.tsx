@@ -4,7 +4,7 @@ import { Textarea } from "@/components/ui/textarea";
 import {
   ArrowRight,
   ChevronUp,
-  Clipboard,
+  Copy,
   File,
   Image,
   Info,
@@ -592,7 +592,7 @@ const CreateAgent = () => {
                     className="cursor-pointer"
                     onClick={() => writeToClipboard(devWallet)}
                   >
-                    <Clipboard className="size-5" />
+                    <Copy className="size-5" />
                   </button>
                 </div>
                 <Input className="w-full mt-2" value={devWallet} disabled />
@@ -608,7 +608,7 @@ const CreateAgent = () => {
                     className="cursor-pointer"
                     onClick={() => writeToClipboard(agentWallet)}
                   >
-                    <Clipboard className="size-5" />
+                    <Copy className="size-5" />
                   </button>
                 </div>
                 <Input className="w-full mt-2" value={agentWallet} disabled />

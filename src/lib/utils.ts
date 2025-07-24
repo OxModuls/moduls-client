@@ -53,7 +53,7 @@ export function getHumanReadableTimeAgo(
 export const writeToClipboard = async (text: string) => {
   try {
     await navigator.clipboard.writeText(text);
-    toast.success("Successfully copied to clipboard");
+    toast.success("Copied to clipboard");
   } catch (error: any) {
     toast.error(error.message);
   }

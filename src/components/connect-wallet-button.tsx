@@ -64,7 +64,7 @@ const ConnectWalletButton = () => {
     <>
       {isConnected ? (
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-          <DrawerTrigger>
+          <DrawerTrigger className="cursor-pointer">
             <div className="relative">
               <img
                 src={avatarImage}
@@ -133,7 +133,7 @@ const ConnectWalletButton = () => {
       ) : (
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerTrigger asChild>
-            <button className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105">
+            <button className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105 cursor-pointer">
               Connect
             </button>
           </DrawerTrigger>
