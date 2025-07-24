@@ -14,6 +14,7 @@ import { Copy, Power } from "lucide-react";
 
 import metamaskIcon from "../assets/icons/metamask.svg";
 import trustwalletIcon from "../assets/icons/trustwallet.svg";
+import avatarImage from "../assets/avatar.svg";
 import { ellipsizeAddress, writeToClipboard } from "@/lib/utils";
 import { toast } from "sonner";
 
@@ -24,7 +25,6 @@ const connectorIcons = new Map<string, string>([
 ]);
 
 const ConnectWalletButton = () => {
-  const [showWalletOptions, setShowWalletOptions] = useState(false);
   const { connect, connectors } = useConnect();
   8;
   const { address, isConnected, connector: activeConnector } = useAccount();
@@ -64,21 +64,22 @@ const ConnectWalletButton = () => {
     <>
       {isConnected ? (
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
-          <DrawerTrigger asChild>
-            <button
-              onClick={() => setShowWalletOptions(!showWalletOptions)}
-              className="px-3 py-2 bg-accent rounded-xl font-medium transition-all duration-500 hover:scale-105 flex items-center gap-2"
-            >
+          <DrawerTrigger>
+            <div className="relative">
+              <img
+                src={avatarImage}
+                alt=""
+                className="size-8 rounded-full border-2 border-accent"
+              />
               <img
                 src={
                   activeConnector!.icon ||
                   connectorIcons.get(activeConnector!.id)
                 }
                 alt={activeConnector!.name + "logo"}
-                className="size-5 rounded-full"
+                className="size-5 rounded-full absolute bottom-0 right-0"
               />
-              <span>{ellipsizeAddress(address!, 4, 4)}</span>
-            </button>
+            </div>
           </DrawerTrigger>
           <DrawerContent>
             <DrawerHeader>
@@ -92,7 +93,7 @@ const ConnectWalletButton = () => {
                 <div className="flex items-center gap-4">
                   <div className="relative">
                     <img
-                      src={undefined}
+                      src={avatarImage}
                       alt=""
                       className="size-12 rounded-full border-2 border-accent"
                     />
@@ -102,7 +103,7 @@ const ConnectWalletButton = () => {
                         connectorIcons.get(activeConnector!.id)
                       }
                       alt={activeConnector!.name + "logo"}
-                      className="size-4 rounded-full absolute bottom-0 right-0"
+                      className="size-6 rounded-full absolute bottom-0 right-0"
                     />
                   </div>
                   <div className="flex items-center gap-2">
@@ -132,10 +133,7 @@ const ConnectWalletButton = () => {
       ) : (
         <Drawer open={drawerOpen} onOpenChange={setDrawerOpen}>
           <DrawerTrigger asChild>
-            <button
-              onClick={() => setShowWalletOptions(!showWalletOptions)}
-              className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105"
-            >
+            <button className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105">
               Connect
             </button>
           </DrawerTrigger>
