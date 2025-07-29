@@ -9,7 +9,6 @@ import {
   Bot,
   Calendar,
   ChartCandlestick,
-  ChevronDown,
   CircleQuestionMark,
   Copy,
   Database,
@@ -21,11 +20,6 @@ import {
   Wallet,
 } from "lucide-react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import { useState } from "react";
 import {
   ellipsizeAddress,
@@ -35,8 +29,7 @@ import {
 } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import SeiIcon from "@/components/sei-icon";
-import pepeImg from "../assets/images/pepe.png";
-import { Textarea } from "@/components/ui/textarea";
+import ChatPopup from "@/components/chat-popup";
 
 const Token = () => {
   const [chartData, _setChartData] = useState([
@@ -333,7 +326,6 @@ const Token = () => {
     },
   ]);
   const [agentPopoverOpen, setAgentPopoverOpen] = useState(false);
-
   const [token, _setToken] = useState({
     name: "Moduls",
     image: "https://example.com/aqualink-logo.png",
@@ -352,441 +344,388 @@ const Token = () => {
   });
 
   return (
-    <>
-      <div className="w-full max-w-screen px-6 pt-4 pb-12 flex flex-col">
-        <div className="w-full max-w-lg mx-auto">
-          <div className="w-full flex items-center gap-3">
-            <Avatar className="size-24 border-3 border-accent">
-              <AvatarImage src={token.image} />
-              <AvatarFallback />
-            </Avatar>
-            <div>
-              <h1 className="text-xl font-bold uppercase">{token.name}</h1>
-              <div className="flex items-center gap-2">
-                <p>
-                  Created by: <span>{ellipsizeAddress(token.createdBy)}</span>
-                </p>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => writeToClipboard(token.createdBy)}
-                >
-                  <Copy className="size-5" />
-                </button>
-              </div>
+    <div className="w-full max-w-screen px-6 pt-4 pb-12 flex flex-col relative">
+      <div className="w-full max-w-lg mx-auto">
+        <div className="w-full flex items-center gap-3">
+          <Avatar className="size-18 border-3 border-accent">
+            <AvatarImage src={token.image} />
+            <AvatarFallback />
+          </Avatar>
+          <div>
+            <h1 className="text-xl font-bold uppercase">{token.name}</h1>
+            <div className="flex items-center gap-2">
+              <p>
+                Created by: <span>{ellipsizeAddress(token.createdBy)}</span>
+              </p>
+              <button
+                className="cursor-pointer"
+                onClick={() => writeToClipboard(token.createdBy)}
+              >
+                <Copy className="size-5" />
+              </button>
             </div>
           </div>
+        </div>
 
-          <div className="mt-5 flex flex-col items-start gap-3">
-            <div className="flex flex-col gap-3 md:flex-row">
-              <div className="w-auto px-4 py-3 bg-primary-foreground rounded-lg border flex items-center gap-2">
-                <p>
-                  Contract Address:{" "}
-                  <span>{ellipsizeAddress(token.createdBy, 4, 4)}</span>
-                </p>
-                <button
-                  className="cursor-pointer"
-                  onClick={() => writeToClipboard(token.createdBy)}
-                >
-                  <Copy className="size-5" />
-                </button>
-              </div>
-            </div>
-            <div className="flex gap-3">
-              <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex items-center justify-between gap-1">
-                <p>
-                  Time Created: <span>{formatISODate(token.creationDate)}</span>
-                </p>
-              </div>
-              <a
-                href={token.website}
-                target="_blank"
-                className="px-4 py-3 bg-primary-foreground border rounded-lg"
+        <div className="mt-5 flex flex-col items-start gap-3">
+          <div className="flex flex-col gap-3 md:flex-row">
+            <div className="w-auto px-4 py-3 bg-primary-foreground rounded-lg border flex items-center gap-2">
+              <p>
+                Contract Address:{" "}
+                <span>{ellipsizeAddress(token.createdBy, 4, 4)}</span>
+              </p>
+              <button
+                className="cursor-pointer"
+                onClick={() => writeToClipboard(token.createdBy)}
               >
-                <Globe />
-              </a>
-            </div>
-            <div className="w-full px-4 py-3 bg-primary-foreground rounded-lg border flex flex-col justify-between gap-3">
-              <div className="w-full flex justify-between">
-                <span>Curve Progress:</span>
-                <span className="text-accent">
-                  {(100 * token.curveProgress.current) /
-                    token.curveProgress.target}
-                  %
-                </span>
-              </div>
-              <Progress
-                value={
-                  (100 * token.curveProgress.current) /
-                  token.curveProgress.target
-                }
-                indicatorClassName="bg-green-500 dark:bg-green-600"
-              />
-              <div className="w-full flex justify-between">
-                <span>
-                  Current: ${token.curveProgress.current.toLocaleString()}
-                </span>
-                <span>
-                  Target: ${token.curveProgress.target.toLocaleString()}
-                </span>
-              </div>
+                <Copy className="size-5" />
+              </button>
             </div>
           </div>
+          <div className="flex gap-3">
+            <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex items-center justify-between gap-1">
+              <p>
+                Time Created: <span>{formatISODate(token.creationDate)}</span>
+              </p>
+            </div>
+            <a
+              href={token.website}
+              target="_blank"
+              className="px-4 py-3 bg-primary-foreground border rounded-lg"
+            >
+              <Globe />
+            </a>
+          </div>
+          <div className="w-full px-4 py-3 bg-primary-foreground rounded-lg border flex flex-col justify-between gap-3">
+            <div className="w-full flex justify-between">
+              <span>Curve Progress:</span>
+              <span className="text-accent">
+                {(100 * token.curveProgress.current) /
+                  token.curveProgress.target}
+                %
+              </span>
+            </div>
+            <Progress
+              value={
+                (100 * token.curveProgress.current) / token.curveProgress.target
+              }
+              indicatorClassName="bg-green-500 dark:bg-green-600"
+            />
+            <div className="w-full flex justify-between">
+              <span>
+                Current: ${token.curveProgress.current.toLocaleString()}
+              </span>
+              <span>
+                Target: ${token.curveProgress.target.toLocaleString()}
+              </span>
+            </div>
+          </div>
+        </div>
 
-          <Tabs defaultValue="about" className="mt-5">
-            <TabsList className="w-full py-5">
-              <TabsTrigger
-                value="about"
-                className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
-              >
-                <Info className="size-5" />
-                <h2 className="text-base font-semibold">About</h2>
-              </TabsTrigger>
-              <TabsTrigger
-                value="trade"
-                className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
-              >
-                <BadgeDollarSign className="size-5" />
-                <h2 className="text-base font-semibold">Buy/Sell</h2>
-              </TabsTrigger>
-              <TabsTrigger
-                value="holders"
-                className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
-              >
-                <UserRound className="size-5" />
-                <h2 className="text-base font-semibold">Holders</h2>
-              </TabsTrigger>
-            </TabsList>
+        <Tabs defaultValue="about" className="mt-5">
+          <TabsList className="w-full py-5">
+            <TabsTrigger
+              value="about"
+              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+            >
+              <Info className="size-5" />
+              <h2 className="text-base font-semibold">About</h2>
+            </TabsTrigger>
+            <TabsTrigger
+              value="trade"
+              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+            >
+              <BadgeDollarSign className="size-5" />
+              <h2 className="text-base font-semibold">Buy/Sell</h2>
+            </TabsTrigger>
+            <TabsTrigger
+              value="holders"
+              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+            >
+              <UserRound className="size-5" />
+              <h2 className="text-base font-semibold">Holders</h2>
+            </TabsTrigger>
+          </TabsList>
 
-            <TabsContent value="about" asChild>
-              <div className="mt-3">
-                <div className="">
-                  <div className="ml-2 flex items-center gap-2">
-                    <ChartCandlestick className="size-4" />
-                    <h2 className="text-lg font-semibold">Chart</h2>
+          <TabsContent value="about" asChild>
+            <div className="mt-3">
+              <div className="">
+                <div className="ml-2 flex items-center gap-2">
+                  <ChartCandlestick className="size-4" />
+                  <h2 className="text-lg font-semibold">Chart</h2>
+                </div>
+                <div className="mt-2 px-2 py-4 bg-primary-foreground rounded-lg">
+                  <CandlestickChart data={chartData} />
+                </div>
+              </div>
+
+              <div className="mt-5">
+                <div className="ml-2 flex items-center gap-2">
+                  <Bot className="size-4" />
+                  <h2 className="text-lg font-semibold">Agent Description</h2>
+                </div>
+                <div className="mt-2 px-2">
+                  Lorem, ipsum dolor sit amet consectetur adipisicing elit.
+                  Vitae quam, harum at pariatur optio quos aut commodi numquam
+                  enim, earum nulla. Soluta ducimus adipisci placeat quas
+                  perferendis excepturi non beatae.
+                </div>
+              </div>
+
+              <div className="mt-5 flex flex-col gap-3">
+                <div className="ml-2 flex items-center gap-2">
+                  <Info className="size-4" />
+                  <h2 className="text-lg font-semibold">Info</h2>
+                </div>
+                <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <Database className="size-5" />
+                    <span className="font-medium">Supply</span>
                   </div>
-                  <div className="mt-2 px-2 py-4 bg-primary-foreground rounded-lg">
-                    <CandlestickChart data={chartData} />
+                  <span>{token.supply.toLocaleString()}</span>
+                </div>
+                <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <Calendar className="size-5" />
+                    <span className="font-medium">Created</span>
+                  </div>
+                  <span>{formatISODate(token.creationDate)}</span>
+                </div>
+                <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <Banknote className="size-5" />
+                    <span className="font-medium">Trade fees</span>
+                  </div>
+                  <div className="flex items-center gap-1">
+                    <span>{token.tradeFees}%</span>
+                    <CircleQuestionMark className="size-4 text-muted-foreground" />
                   </div>
                 </div>
-
-                <div className="mt-5">
-                  <div className="ml-2 flex items-center gap-2">
-                    <Bot className="size-4" />
-                    <h2 className="text-lg font-semibold">Agent Description</h2>
+                <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <Link className="size-5" />
+                    <span className="font-medium">Contract Address:</span>
                   </div>
-                  <div className="mt-2 px-2">
-                    Lorem, ipsum dolor sit amet consectetur adipisicing elit.
-                    Vitae quam, harum at pariatur optio quos aut commodi numquam
-                    enim, earum nulla. Soluta ducimus adipisci placeat quas
-                    perferendis excepturi non beatae.
+                  <div className="flex items-center gap-1">
+                    <span>{ellipsizeAddress(token.contractAddress)}</span>
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => writeToClipboard(token.contractAddress)}
+                    >
+                      <Copy className="size-4" />
+                    </button>
                   </div>
                 </div>
-
-                <div className="mt-5 flex flex-col gap-3">
-                  <div className="ml-2 flex items-center gap-2">
-                    <Info className="size-4" />
-                    <h2 className="text-lg font-semibold">Info</h2>
+                <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <UserRound className="size-5" />
+                    <span className="font-medium">Developer Address:</span>
                   </div>
-                  <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <Database className="size-5" />
-                      <span className="font-medium">Supply</span>
-                    </div>
-                    <span>{token.supply.toLocaleString()}</span>
-                  </div>
-                  <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <Calendar className="size-5" />
-                      <span className="font-medium">Created</span>
-                    </div>
-                    <span>{formatISODate(token.creationDate)}</span>
-                  </div>
-                  <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <Banknote className="size-5" />
-                      <span className="font-medium">Trade fees</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>{token.tradeFees}%</span>
-                      <CircleQuestionMark className="size-4 text-muted-foreground" />
-                    </div>
-                  </div>
-                  <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <Link className="size-5" />
-                      <span className="font-medium">Contract Address:</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>{ellipsizeAddress(token.contractAddress)}</span>
-                      <button
-                        className="cursor-pointer"
-                        onClick={() => writeToClipboard(token.contractAddress)}
-                      >
-                        <Copy className="size-4" />
-                      </button>
-                    </div>
-                  </div>
-                  <div className="px-4 py-3 bg-primary-foreground rounded-lg border flex justify-between">
-                    <div className="flex items-center gap-2">
-                      <UserRound className="size-5" />
-                      <span className="font-medium">Developer Address:</span>
-                    </div>
-                    <div className="flex items-center gap-1">
-                      <span>{ellipsizeAddress(token.devAddress)}</span>
-                      <button
-                        className="cursor-pointer"
-                        onClick={() => writeToClipboard(token.devAddress)}
-                      >
-                        <Copy className="size-4" />
-                      </button>
-                    </div>
+                  <div className="flex items-center gap-1">
+                    <span>{ellipsizeAddress(token.devAddress)}</span>
+                    <button
+                      className="cursor-pointer"
+                      onClick={() => writeToClipboard(token.devAddress)}
+                    >
+                      <Copy className="size-4" />
+                    </button>
                   </div>
                 </div>
               </div>
-            </TabsContent>
+            </div>
+          </TabsContent>
 
-            <TabsContent value="trade" asChild>
-              <div className="w-full">
-                <div className="pt-4">
-                  <div className="w-full flex gap-2 bg-primary-foreground">
-                    <button
-                      data-active={activeTradeTab === "buy"}
-                      className="py-2 flex-1 border-2 data-[active=true]:border-green-600 data-[active=true]:text-green-600 rounded-lg font-semibold cursor-pointer"
-                      onClick={() => setActiveTradeTab("buy")}
+          <TabsContent value="trade" asChild>
+            <div className="w-full">
+              <div className="pt-4">
+                <div className="w-full flex gap-2 bg-primary-foreground">
+                  <button
+                    data-active={activeTradeTab === "buy"}
+                    className="py-2 flex-1 border-2 data-[active=true]:border-green-600 data-[active=true]:text-green-600 rounded-lg font-semibold cursor-pointer"
+                    onClick={() => setActiveTradeTab("buy")}
+                  >
+                    Buy
+                  </button>
+                  <button
+                    data-active={activeTradeTab === "sell"}
+                    className="py-2 flex-1 border-2 data-[active=true]:border-red-600 data-[active=true]:text-red-600 rounded-lg font-semibold cursor-pointer"
+                    onClick={() => setActiveTradeTab("sell")}
+                  >
+                    Sell
+                  </button>
+                </div>
+                <div className="mt-3 px-2 py-4 bg-neutral-850 border rounded-lg flex flex-col gap-4">
+                  <div className="w-full flex flex-col gap-1">
+                    <label
+                      htmlFor="slippage"
+                      className="ml-1 text-sm font-semibold"
                     >
-                      Buy
-                    </button>
-                    <button
-                      data-active={activeTradeTab === "sell"}
-                      className="py-2 flex-1 border-2 data-[active=true]:border-red-600 data-[active=true]:text-red-600 rounded-lg font-semibold cursor-pointer"
-                      onClick={() => setActiveTradeTab("sell")}
-                    >
-                      Sell
-                    </button>
+                      Slippage (%)
+                    </label>
+                    <Input
+                      type="number"
+                      id="slippage"
+                      className="py-2"
+                      defaultValue={5}
+                    />
                   </div>
-                  <div className="mt-3 px-2 py-4 bg-neutral-850 border rounded-lg flex flex-col gap-4">
-                    <div className="w-full flex flex-col gap-1">
-                      <label
-                        htmlFor="slippage"
-                        className="ml-1 text-sm font-semibold"
-                      >
-                        Slippage (%)
-                      </label>
+                  <div className="w-full flex flex-col gap-1">
+                    <label
+                      htmlFor="amount"
+                      className="ml-1 text-sm font-semibold"
+                    >
+                      Amount
+                    </label>
+                    <div className="relative">
                       <Input
                         type="number"
-                        id="slippage"
-                        className="py-2"
-                        defaultValue={5}
+                        id="amount"
+                        className="py-2 pr-28"
+                        defaultValue={0}
                       />
-                    </div>
-                    <div className="w-full flex flex-col gap-1">
-                      <label
-                        htmlFor="amount"
-                        className="ml-1 text-sm font-semibold"
-                      >
-                        Amount
-                      </label>
-                      <div className="relative">
-                        <Input
-                          type="number"
-                          id="amount"
-                          className="py-2 pr-28"
-                          defaultValue={0}
-                        />
-                        <div className="absolute top-[50%] translate-y-[-50%] right-4 flex items-center gap-2 text-neutral-400">
-                          <div className="flex items-center gap-2">
-                            <span className="uppercase">sei</span>
-                            <SeiIcon className="size-4" />
-                          </div>
-                          <div className="h-4 w-0.5 bg-neutral-400" />
-                          <button className="cursor-pointer">
-                            <ArrowLeftRight className="size-4" />
-                          </button>
+                      <div className="absolute top-[50%] translate-y-[-50%] right-4 flex items-center gap-2 text-neutral-400">
+                        <div className="flex items-center gap-2">
+                          <span className="uppercase">sei</span>
+                          <SeiIcon className="size-4" />
                         </div>
-                      </div>
-                      <div className="px-1 w-full flex justify-between text-xs">
-                        <span className="text-red-500">
-                          Insufficient balance
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <Wallet className="size-3" />
-                          <span className="">0 SEI</span>
-                          <button className="text-green-500">MAX</button>
-                        </div>
+                        <div className="h-4 w-0.5 bg-neutral-400" />
+                        <button className="cursor-pointer">
+                          <ArrowLeftRight className="size-4" />
+                        </button>
                       </div>
                     </div>
-                    <div>
-                      <button
-                        className={`py-2 w-full capitalize rounded-lg font-semibold cursor-pointer ${activeTradeTab === "buy" ? "bg-green-600" : "bg-red-600"}`}
-                      >
-                        {activeTradeTab}
-                      </button>
-                      <div className="mt-1.25 text-neutral-400 text-xs flex items-center justify-center">
-                        <p>
-                          You will receive <span>1,000,000</span>{" "}
-                          {token.name.toUpperCase()}
-                        </p>
+                    <div className="px-1 w-full flex justify-between text-xs">
+                      <span className="text-red-500">Insufficient balance</span>
+                      <div className="flex items-center gap-1">
+                        <Wallet className="size-3" />
+                        <span className="">0 SEI</span>
+                        <button className="text-green-500">MAX</button>
                       </div>
                     </div>
                   </div>
-                </div>
-
-                {/* transactions */}
-                <div className="mt-5 w-full">
-                  <div className="ml-2 flex items-center gap-2">
-                    <ArrowUpDown className="size-4" />
-                    <h2 className="text-lg font-semibold">Transactions</h2>
-                  </div>
-
-                  <div className="mt-3 px-3 py-2 bg-primary-foreground border rounded-lg overflow-x-auto">
-                    <table className="">
-                      <thead>
-                        <tr className="[&>th]:font-semibold [&>th]:px-4 border-b whitespace-nowrap">
-                          <th scope="col">Time</th>
-                          <th scope="col">Type</th>
-                          <th scope="col">SEI</th>
-                          <th scope="col" className="capitalize">
-                            {token.name}
-                          </th>
-                          <th>Account</th>
-                        </tr>
-                      </thead>
-
-                      <tbody className="[&>tr:not(:last-child)]:border-b">
-                        {transactions.map((transaction, idx) => (
-                          <tr
-                            key={idx}
-                            className="[&>td]:px-4 [&>td]:py-0.5 [&>td]:whitespace-nowrap"
-                          >
-                            <td>{getHumanReadableTimeAgo(transaction.date)}</td>
-                            <td className="">
-                              <div
-                                className={`px-2.5 py-1 rounded-xl capitalize text-sm font-medium ${transaction.type === "sell" ? "bg-red-600" : "bg-green-600"}`}
-                              >
-                                {transaction.type}
-                              </div>
-                            </td>
-                            <td className="font-mono text-center">
-                              {transaction.seiAmount.toLocaleString()}
-                            </td>
-                            <td className="font-mono text-center">
-                              {transaction.tokenAmount.toLocaleString()}
-                            </td>
-                            <td className="flex items-center gap-2 font-mono">
-                              <span>
-                                {ellipsizeAddress(transaction.account, 4, 4)}
-                              </span>
-                              <a
-                                href={`https://seitrace.com/address/${transaction.account}`}
-                                target="_blank"
-                              >
-                                <SquareArrowOutUpRight className="size-4" />
-                              </a>
-                            </td>
-                          </tr>
-                        ))}
-                      </tbody>
-                    </table>
+                  <div>
+                    <button
+                      className={`py-2 w-full capitalize rounded-lg font-semibold cursor-pointer ${activeTradeTab === "buy" ? "bg-green-600" : "bg-red-600"}`}
+                    >
+                      {activeTradeTab}
+                    </button>
+                    <div className="mt-1.25 text-neutral-400 text-xs flex items-center justify-center">
+                      <p>
+                        You will receive <span>1,000,000</span>{" "}
+                        {token.name.toUpperCase()}
+                      </p>
+                    </div>
                   </div>
                 </div>
               </div>
-            </TabsContent>
 
-            <TabsContent value="holders" asChild>
-              <div>
-                <p className="mt-3 ml-2 font-semibold">Top Token Holders</p>
-                <div className="mt-3 px-3 py-2 bg-primary-foreground border rounded-lg">
-                  <table className="w-full">
+              {/* transactions */}
+              <div className="mt-5 w-full">
+                <div className="ml-2 flex items-center gap-2">
+                  <ArrowUpDown className="size-4" />
+                  <h2 className="text-lg font-semibold">Transactions</h2>
+                </div>
+
+                <div className="mt-3 px-3 py-2 bg-primary-foreground border rounded-lg overflow-x-auto">
+                  <table className="">
                     <thead>
-                      <tr className="[&>th]:font-semibold border-b">
-                        <th scope="col">#</th>
-                        <th scope="col">Holder</th>
-                        <th scope="col">%</th>
+                      <tr className="[&>th]:font-semibold [&>th]:px-4 border-b whitespace-nowrap">
+                        <th scope="col">Time</th>
+                        <th scope="col">Type</th>
+                        <th scope="col">SEI</th>
+                        <th scope="col" className="capitalize">
+                          {token.name}
+                        </th>
+                        <th>Account</th>
                       </tr>
                     </thead>
-                    <tbody className="font-mono [&>tr:not(:last-child)]:border-b">
-                      {holders.map((holder, idx) => (
-                        <tr key={idx} className="[&>th,td]:py-0.5">
-                          <th scope="row" className="font-semibold">
-                            {idx + 1}
-                          </th>
-                          <td className="flex justify-center items-center gap-2">
-                            <span className="text-accent">
-                              {ellipsizeAddress(holder.address)}
-                            </span>
-                            <button
-                              className="cursor-pointer"
-                              onClick={() => writeToClipboard(holder.address)}
+
+                    <tbody className="[&>tr:not(:last-child)]:border-b">
+                      {transactions.map((transaction, idx) => (
+                        <tr
+                          key={idx}
+                          className="[&>td]:px-4 [&>td]:py-0.5 [&>td]:whitespace-nowrap"
+                        >
+                          <td>{getHumanReadableTimeAgo(transaction.date)}</td>
+                          <td className="">
+                            <div
+                              className={`px-2.5 py-1 rounded-xl capitalize text-sm font-medium ${transaction.type === "sell" ? "bg-red-600" : "bg-green-600"}`}
                             >
-                              <Copy className="size-4" />
-                            </button>
+                              {transaction.type}
+                            </div>
                           </td>
-                          <td className="text-center">{holder.percentage}%</td>
+                          <td className="font-mono text-center">
+                            {transaction.seiAmount.toLocaleString()}
+                          </td>
+                          <td className="font-mono text-center">
+                            {transaction.tokenAmount.toLocaleString()}
+                          </td>
+                          <td className="flex items-center gap-2 font-mono">
+                            <span>
+                              {ellipsizeAddress(transaction.account, 4, 4)}
+                            </span>
+                            <a
+                              href={`https://seitrace.com/address/${transaction.account}`}
+                              target="_blank"
+                            >
+                              <SquareArrowOutUpRight className="size-4" />
+                            </a>
+                          </td>
                         </tr>
                       ))}
                     </tbody>
                   </table>
                 </div>
               </div>
-            </TabsContent>
-          </Tabs>
-        </div>
-      </div>
+            </div>
+          </TabsContent>
 
-      <Popover open={agentPopoverOpen} onOpenChange={setAgentPopoverOpen}>
-        <PopoverTrigger asChild>
-          <button className="fixed z-10 right-4 bottom-8 rounded-full border-2 border-accent cursor-pointer">
-            <img
-              src={pepeImg}
-              alt="agent-pepe"
-              className="size-12 rounded-full"
-            />
-          </button>
-        </PopoverTrigger>
-        <PopoverContent className="w-screen md:w-sm">
-          <div className="flex justify-between">
-            <div className="flex items-center gap-3">
-              <img src={pepeImg} alt="pepe" className="size-12 rounded-full" />
-              <div className="flex gap-0.5 flex-col">
-                <p className="font-medium">Moduls Agent</p>
-                <div className="flex items-center gap-1">
-                  <span className="font-mono">
-                    {ellipsizeAddress(token.agentAddress)}
-                  </span>
-                  <button
-                    className="cursor-pointer"
-                    onClick={() => writeToClipboard(token.agentAddress)}
-                  >
-                    <Copy className="size-4" />
-                  </button>
-                </div>
+          <TabsContent value="holders" asChild>
+            <div>
+              <p className="mt-3 ml-2 font-semibold">Top Token Holders</p>
+              <div className="mt-3 px-3 py-2 bg-primary-foreground border rounded-lg">
+                <table className="w-full">
+                  <thead>
+                    <tr className="[&>th]:font-semibold border-b">
+                      <th scope="col">#</th>
+                      <th scope="col">Holder</th>
+                      <th scope="col">%</th>
+                    </tr>
+                  </thead>
+                  <tbody className="font-mono [&>tr:not(:last-child)]:border-b">
+                    {holders.map((holder, idx) => (
+                      <tr key={idx} className="[&>th,td]:py-0.5">
+                        <th scope="row" className="font-semibold">
+                          {idx + 1}
+                        </th>
+                        <td className="flex justify-center items-center gap-2">
+                          <span className="text-accent">
+                            {ellipsizeAddress(holder.address)}
+                          </span>
+                          <button
+                            className="cursor-pointer"
+                            onClick={() => writeToClipboard(holder.address)}
+                          >
+                            <Copy className="size-4" />
+                          </button>
+                        </td>
+                        <td className="text-center">{holder.percentage}%</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
               </div>
             </div>
+          </TabsContent>
+        </Tabs>
+      </div>
 
-            <div
-              onClick={() => setAgentPopoverOpen(false)}
-              className="mt-1 cursor-pointer"
-            >
-              <ChevronDown className="size-7" />
-            </div>
-          </div>
-          <div className="my-4 w-full h-0.25 bg-neutral-600" />
-          <div className="h-96 flex flex-col gap-5 items-center justify-center">
-            <div className="">
-              <h2 className="text-xl font-semibold">
-                What can I help you with?
-              </h2>
-            </div>
-            <div className="w-full">
-              <Textarea placeholder="Ask me anything" className="" />
-              <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium">
-                Start Chat
-              </button>
-            </div>
-          </div>
-        </PopoverContent>
-      </Popover>
-    </>
+      <ChatPopup
+        popoverOpen={agentPopoverOpen}
+        onPopoverOpenChange={setAgentPopoverOpen}
+        agentAddress={token.agentAddress as `0x${string}`}
+      />
+    </div>
   );
 };
 
