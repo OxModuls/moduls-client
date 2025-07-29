@@ -121,7 +121,7 @@ const ConnectWalletButton = () => {
                       className="size-6 rounded-full absolute bottom-0 right-0"
                     />
                   </div>
-                  <div className="flex flex-col">
+                  <div className="flex flex-col items-start">
                     <div className="flex items-center gap-2">
                       <span className=" font-medium">
                         {ellipsizeAddress(address!, 7, 7)}
@@ -133,7 +133,7 @@ const ConnectWalletButton = () => {
                         <Copy className="size-5" />
                       </button>
                     </div>
-                    <div className="font-medium">
+                    <div className="px-2 py-0.5 rounded-lg bg-neutral-800 font-medium">
                       <span>{walletBalance?.value}</span> <span>SEI</span>
                     </div>
                   </div>
