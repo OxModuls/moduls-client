@@ -426,21 +426,21 @@ const Token = () => {
           <TabsList className="w-full py-5">
             <TabsTrigger
               value="about"
-              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+              className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <Info className="size-5" />
               <h2 className="text-base font-semibold">About</h2>
             </TabsTrigger>
             <TabsTrigger
               value="trade"
-              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+              className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <BadgeDollarSign className="size-5" />
               <h2 className="text-base font-semibold">Buy/Sell</h2>
             </TabsTrigger>
             <TabsTrigger
               value="holders"
-              className="flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+              className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <UserRound className="size-5" />
               <h2 className="text-base font-semibold">Holders</h2>
@@ -721,8 +721,8 @@ const Token = () => {
       </div>
 
       <ChatPopup
-        popoverOpen={agentPopoverOpen}
-        onPopoverOpenChange={setAgentPopoverOpen}
+        open={agentPopoverOpen}
+        onOpenChange={setAgentPopoverOpen}
         agentAddress={token.agentAddress as `0x${string}`}
       />
     </div>
