@@ -12,18 +12,21 @@ import {
   SheetTrigger,
 } from "./ui/sheet";
 import {
-  ChevronDown,
   Copy,
+  Maximize2,
   Menu,
   MessageSquare,
   MessageSquarePlus,
+  Minimize2,
   PanelLeft,
   Search,
   Trash2,
+  X,
 } from "lucide-react";
 import { Textarea } from "./ui/textarea";
 import pepeImg from "../assets/images/pepe.png";
 import { Input } from "./ui/input";
+import { PopoverAnchor } from "@radix-ui/react-popover";
 
 type ChatPopupProps = {
   open: boolean;
@@ -33,6 +36,7 @@ type ChatPopupProps = {
 
 const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [fullScreen, setFullScreen] = useState(false);
   const { data: agentWalletBalance } = useBalance({
     address: agentAddress,
   });
@@ -59,8 +63,16 @@ const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
           />
         </button>
       </PopoverTrigger>
-      <div className={`fixed inset-0 bg-black/50 ${open || "hidden"} z-10`} />
-      <PopoverContent className="w-screen md:w-md">
+      <div
+        className={`fixed inset-0 bg-black/50 ${open ? "" : "hidden"} z-10`}
+      />
+      {fullScreen && (
+        <PopoverAnchor className="fixed top-0 left-0"></PopoverAnchor>
+      )}
+      <PopoverContent
+        className="w-screen md:w-md data-[fullscreen=true]:md:w-screen data-[fullscreen=true]:h-screen flex flex-col"
+        data-fullscreen={fullScreen}
+      >
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -116,12 +128,11 @@ const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
 
             <div className="flex gap-3 items-center">
               <img src={pepeImg} alt="pepe" className="size-10 rounded-full" />
-
               <div className="flex gap-0.5 flex-col">
                 <p className="font-medium">Moduls Agent</p>
                 <div className="flex items-center gap-1">
                   <span className="font-mono">
-                    {ellipsizeAddress(agentAddress)}
+                    {ellipsizeAddress(agentAddress, 4, 2)}
                   </span>
                   <button
                     className="cursor-pointer"
@@ -132,46 +143,64 @@ const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
                 </div>
               </div>
             </div>
-            <div>
+
+            <div className="md:ml-2">
               <div className="px-2 py-1 rounded-xl bg-neutral-700 text-sm">
                 <span>{agentWalletBalance?.value}</span> SEI
               </div>
             </div>
           </div>
 
-          <div
-            onClick={() => onOpenChange(false)}
-            className="mt-1 cursor-pointer"
-          >
-            <ChevronDown className="size-7" />
+          <div className="flex gap-2 md:gap-4 items-center">
+            <button
+              onClick={() => setFullScreen(!fullScreen)}
+              className="cursor-pointer"
+            >
+              {fullScreen ? (
+                <Minimize2 className="size-5" />
+              ) : (
+                <Maximize2 className="size-5" />
+              )}
+            </button>
+            <button
+              onClick={() => onOpenChange(false)}
+              className="cursor-pointer"
+            >
+              <X className="size-5" />
+            </button>
           </div>
         </div>
-        <div className="my-4 w-full h-0.25 bg-neutral-700" />
-        <div className="">
-          <div className="px-4 flex flex-col gap-5 items-center justify-center">
-            <div className="mt-12">
-              <h2 className="text-xl font-semibold">
-                What can I help you with?
-              </h2>
-            </div>
-            <div className="w-full">
-              <Textarea placeholder="Ask me anything" className="" />
-              <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium cursor-pointer">
-                Start Chat
-              </button>
-            </div>
-          </div>
 
-          <div className="w-full mt-8 flex justify-center">
-            <div className="w-full p-4 flex justify-center flex-wrap gap-1">
-              {promptSuggestions.map((suggestion, idx) => (
-                <button
-                  key={idx}
-                  className="px-2 py-1 bg-neutral-800 rounded-xl cursor-pointer"
-                >
-                  {suggestion}
+        {/* separator line*/}
+        <div className="my-4 w-full h-0.25 bg-neutral-700" />
+
+        <div className="min-h-[60vh] flex-1 flex items-center justify-center">
+          <div className="max-w-md mx-auto">
+            <div className="px-4 flex flex-col gap-5 items-center justify-center">
+              <div className="">
+                <h2 className="text-xl font-semibold">
+                  What can I help you with?
+                </h2>
+              </div>
+              <div className="w-full">
+                <Textarea placeholder="Ask me anything" className="" />
+                <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium cursor-pointer">
+                  Start Chat
                 </button>
-              ))}
+              </div>
+            </div>
+
+            <div className="w-full mt-8 flex justify-center">
+              <div className="w-full p-4 flex justify-center flex-wrap gap-1.5">
+                {promptSuggestions.map((suggestion, idx) => (
+                  <button
+                    key={idx}
+                    className="px-2 py-1 bg-neutral-800 rounded-xl cursor-pointer"
+                  >
+                    {suggestion}
+                  </button>
+                ))}
+              </div>
             </div>
           </div>
         </div>
