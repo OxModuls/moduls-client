@@ -27,14 +27,16 @@ const Header = () => {
           </div>
         </div>
         <div className="flex items-center gap-4">
-          <div className="hidden px-2 relative md:block">
-            <Input
-              type="search"
-              placeholder="Search token..."
-              className="pl-8"
-            />
-            <Search className="size-4 absolute top-[50%] translate-y-[-50%] left-4" />
-          </div>
+          {pathname === "/" && (
+            <div className="hidden px-2 relative md:block">
+              <Input
+                type="search"
+                placeholder="Search token..."
+                className="pl-8"
+              />
+              <Search className="size-4 absolute top-[50%] translate-y-[-50%] left-4" />
+            </div>
+          )}
           <ConnectWalletButton />
         </div>
       </div>
