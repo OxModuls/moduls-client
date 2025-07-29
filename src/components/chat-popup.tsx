@@ -26,16 +26,12 @@ import pepeImg from "../assets/images/pepe.png";
 import { Input } from "./ui/input";
 
 type ChatPopupProps = {
-  popoverOpen: boolean;
-  onPopoverOpenChange: (open: boolean) => void;
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
   agentAddress: `0x${string}`;
 };
 
-const ChatPopup = ({
-  popoverOpen,
-  onPopoverOpenChange,
-  agentAddress,
-}: ChatPopupProps) => {
+const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const { data: agentWalletBalance } = useBalance({
     address: agentAddress,
@@ -53,7 +49,7 @@ const ChatPopup = ({
   ];
 
   return (
-    <Popover open={popoverOpen} onOpenChange={onPopoverOpenChange}>
+    <Popover open={open} onOpenChange={onOpenChange} modal={true}>
       <PopoverTrigger asChild>
         <button className="fixed z-10 right-4 bottom-8 rounded-full border-2 border-accent cursor-pointer">
           <img
@@ -63,7 +59,8 @@ const ChatPopup = ({
           />
         </button>
       </PopoverTrigger>
-      <PopoverContent className="w-screen md:w-sm">
+      <div className={`fixed inset-0 bg-black/50 ${open || "hidden"} z-10`} />
+      <PopoverContent className="w-screen md:w-md">
         <div className="flex justify-between">
           <div className="flex items-center gap-3">
             <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
@@ -71,7 +68,7 @@ const ChatPopup = ({
                 <Menu className="size-6" />
               </SheetTrigger>
 
-              <SheetContent side="left" className="p-4">
+              <SheetContent side="left" className="p-4" showCloseButton={false}>
                 <SheetHeader className="sr-only">
                   <SheetTitle>Agent Chat Sidebar</SheetTitle>
                   <SheetDescription>Sidebar for agent chat</SheetDescription>
@@ -136,14 +133,14 @@ const ChatPopup = ({
               </div>
             </div>
             <div>
-              <div className="px-2 py-1 rounded-xl bg-neutral-700">
+              <div className="px-2 py-1 rounded-xl bg-neutral-700 text-sm">
                 <span>{agentWalletBalance?.value}</span> SEI
               </div>
             </div>
           </div>
 
           <div
-            onClick={() => onPopoverOpenChange(false)}
+            onClick={() => onOpenChange(false)}
             className="mt-1 cursor-pointer"
           >
             <ChevronDown className="size-7" />
@@ -159,7 +156,7 @@ const ChatPopup = ({
             </div>
             <div className="w-full">
               <Textarea placeholder="Ask me anything" className="" />
-              <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium">
+              <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium cursor-pointer">
                 Start Chat
               </button>
             </div>
