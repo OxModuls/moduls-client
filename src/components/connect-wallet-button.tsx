@@ -355,6 +355,90 @@ type PortfolioDialogProps = {
   onOpenChange: (open: boolean) => void;
 };
 const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
+  const tokenHoldings = [
+    {
+      id: "sei-mainnet", // Unique identifier for the holding
+      tokenName: "SEI",
+      symbol: "SEI",
+      amount: 0.87654321,
+      usdPrice: 3500.0, // Dummy current price
+      usdValue: 3067.89, // amount * usdPrice
+      contractAddress: "0x0000000000000000000000000000000000000000", // ETH has a zero address
+      logoUrl: "https://cryptologos.cc/logos/sei-sei-logo.svg", // Placeholder for a logo
+    },
+    {
+      id: "eth-mainnet", // Unique identifier for the holding
+      tokenName: "Ethereum",
+      symbol: "ETH",
+      amount: 0.87654321,
+      usdPrice: 3500.0, // Dummy current price
+      usdValue: 3067.89, // amount * usdPrice
+      contractAddress: "0x0000000000000000000000000000000000000000", // ETH has a zero address
+      logoUrl: "https://cryptologos.cc/logos/ethereum-eth-logo.svg", // Placeholder for a logo
+    },
+    {
+      id: "usdt-erc20",
+      tokenName: "Tether USD",
+      symbol: "USDT",
+      amount: 1250.75,
+      usdPrice: 1.0,
+      usdValue: 1250.75,
+      contractAddress: "0xdAC17F958D2ee523a2206206994597C13D831ec7", // Common ERC-20 USDT
+      logoUrl: "https://cryptologos.cc/logos/tether-usdt-logo.png?v=026",
+    },
+    {
+      id: "wbtc-erc20",
+      tokenName: "Wrapped Bitcoin",
+      symbol: "WBTC",
+      amount: 0.051234,
+      usdPrice: 70000.0, // Dummy current price
+      usdValue: 3586.38,
+      contractAddress: "0x2260FAC5E5542a773Aa44fBCfeDf7C193bc2C599", // Common ERC-20 WBTC
+      logoUrl:
+        "https://cryptologos.cc/logos/wrapped-bitcoin-wbtc-logo.png?v=026",
+    },
+    {
+      id: "uni-erc20",
+      tokenName: "Uniswap",
+      symbol: "UNI",
+      amount: 25.45,
+      usdPrice: 12.5, // Dummy current price
+      usdValue: 318.13,
+      contractAddress: "0x1f9840a85d5aF5bf1D1762F925BDADdC4201F984", // Uniswap UNI token
+      logoUrl: "https://cryptologos.cc/logos/uniswap-uni-logo.png?v=026",
+    },
+    {
+      id: "link-erc20",
+      tokenName: "Chainlink",
+      symbol: "LINK",
+      amount: 150.0,
+      usdPrice: 18.2, // Dummy current price
+      usdValue: 2730.0,
+      contractAddress: "0x514910771AF9Ca65E36535Ec39EDc287eB1703Cd", // Chainlink LINK token
+      logoUrl: "https://cryptologos.cc/logos/chainlink-link-logo.png?v=026",
+    },
+    {
+      id: "dai-erc20",
+      tokenName: "Dai Stablecoin",
+      symbol: "DAI",
+      amount: 500.0,
+      usdPrice: 1.0,
+      usdValue: 500.0,
+      contractAddress: "0x6B175474E89094C44Da98b954EedeAC495271d0F", // Dai Stablecoin
+      logoUrl: "https://cryptologos.cc/logos/dai-dai-logo.png?v=026",
+    },
+    {
+      id: "shib-erc20",
+      tokenName: "Shiba Inu",
+      symbol: "SHIB",
+      amount: 5000000.0, // Large quantity for meme coins
+      usdPrice: 0.000025, // Dummy current price
+      usdValue: 125.0,
+      contractAddress: "0x95aD61b0a150d79219dCEa232fB6a9F4dFd6Cb4a", // Shiba Inu token
+      logoUrl: "https://cryptologos.cc/logos/shiba-inu-shib-logo.png?v=026",
+    },
+  ];
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={true}>
@@ -363,6 +447,33 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
           <DialogDescription className="sr-only">
             View your portfolio
           </DialogDescription>
+          <div className="mt-4">
+            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
+              {tokenHoldings.map((token, idx) => (
+                <div key={idx} className="flex justify-between">
+                  <div className="flex items-center gap-2">
+                    <img
+                      src={token.logoUrl}
+                      alt=""
+                      className="size-10 rounded-full"
+                    />
+                    <div className="flex flex-col items-start">
+                      <span className="font-semibold">{token.symbol}</span>
+                      <span className="text-sm font-light">
+                        {token.tokenName}
+                      </span>
+                    </div>
+                  </div>
+                  <div className="flex flex-col items-end">
+                    <span className="font-semibold">${token.usdValue}</span>
+                    <span className="text-sm font-light">
+                      {token.amount} {token.symbol}
+                    </span>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </DialogHeader>
       </DialogContent>
     </Dialog>
