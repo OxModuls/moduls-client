@@ -37,7 +37,6 @@ import {
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
-import { Avatar } from "./ui/avatar";
 import { Textarea } from "./ui/textarea";
 import { FaTelegram, FaXTwitter } from "react-icons/fa6";
 import { Input } from "./ui/input";
@@ -293,7 +292,7 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
         <div className="mt-4 flex flex-col gap-2">
           <div className="w-full flex justify-center">
             <div className="relative">
-              <Avatar className="size-20 border-2 border-accent" />
+              <div className="size-24 rounded-full border-2 border-accent" />
               <Camera className="size-6 absolute right-1 bottom-1" />
             </div>
           </div>
