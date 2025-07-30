@@ -67,6 +67,7 @@ const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
         data-fullscreen={fullScreen}
       >
         <SidebarProvider
+          defaultOpen={false}
           style={
             {
               "--sidebar-width": "16rem",
