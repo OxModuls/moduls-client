@@ -415,7 +415,7 @@ const CreateAgent = () => {
                   <div key={idx} className="flex flex-col">
                     <label
                       htmlFor={modulType.identifier}
-                      className={`p-3 border rounded-lg cursor-pointer ${formData.modulType === modulType.identifier ? "border-accent bg-red-950" : "bg-primary-foreground"} aria-disabled:cursor-not-allowed aria-disabled:opacity-60`}
+                      className={`p-3 border rounded-lg cursor-pointer ${formData.modulType === modulType.identifier ? "border-accent bg-accent/25" : "bg-primary-foreground"} aria-disabled:cursor-not-allowed aria-disabled:opacity-60`}
                       aria-disabled={disabled}
                     >
                       <p className="font-semibold flex gap-2">
