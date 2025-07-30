@@ -81,9 +81,12 @@ const ConnectWalletButton = () => {
 
       {/* use popover on desktop */}
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
-        <PopoverTrigger className="hidden md:block cursor-pointer">
+        <PopoverTrigger className="hidden md:block cursor-pointer z-20">
           <Trigger />
         </PopoverTrigger>
+        <div
+          className={`fixed inset-0 bg-black/50 ${popoverOpen ? "" : "hidden"} z-10`}
+        />
         <PopoverContent className="hidden md:block mt-1 w-xs py-4 bg-background rounded-lg border z-10">
           <Content onOpenChange={setPopoverOpen} />
         </PopoverContent>
