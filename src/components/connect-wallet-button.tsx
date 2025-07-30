@@ -102,7 +102,7 @@ const Trigger = () => {
           <img
             src={avatarImage}
             alt=""
-            className="size-9 rounded-full border-2 border-accent"
+            className="size-11 rounded-full border-2 border-accent"
           />
           <img
             src={
@@ -116,9 +116,9 @@ const Trigger = () => {
     );
 
   return (
-    <button className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105 cursor-pointer">
+    <div className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105 cursor-pointer">
       Connect
-    </button>
+    </div>
   );
 };
 
@@ -183,7 +183,7 @@ const Content = ({
 
   if (isConnected)
     return (
-      <div className="px-4">
+      <div className="px-4 md:px-0">
         <div className="flex items-start justify-between">
           <div className="flex items-center gap-4">
             <div className="relative">
@@ -251,7 +251,7 @@ const Content = ({
     );
 
   return (
-    <div className="px-4">
+    <div className="px-4 md:px-0">
       <h2 className="w-full font-semibold text-center">Connect a wallet</h2>
       <div className="mt-4 flex flex-col gap-2">
         {connectors.map((connector) => (
