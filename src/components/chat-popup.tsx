@@ -1,20 +1,20 @@
 import { useBalance } from "wagmi";
-import { useState } from "react";
-import { ellipsizeAddress, writeToClipboard } from "@/lib/utils";
+import { useState, type CSSProperties } from "react";
+import { cn, ellipsizeAddress, writeToClipboard } from "@/lib/utils";
 import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import {
-  Sheet,
-  SheetClose,
-  SheetContent,
-  SheetDescription,
-  SheetHeader,
-  SheetTitle,
-  SheetTrigger,
-} from "./ui/sheet";
+  Sidebar,
+  SidebarContent,
+  SidebarGroup,
+  SidebarHeader,
+  SidebarInset,
+  SidebarProvider,
+  SidebarSeparator,
+  useSidebar,
+} from "./ui/sidebar";
 import {
   Copy,
   Maximize2,
-  Menu,
   MessageSquare,
   MessageSquarePlus,
   Minimize2,
@@ -27,6 +27,8 @@ import { Textarea } from "./ui/textarea";
 import pepeImg from "../assets/images/pepe.png";
 import { Input } from "./ui/input";
 import { PopoverAnchor } from "@radix-ui/react-popover";
+import { useIsMobile } from "@/hooks";
+import { Separator } from "./ui/separator";
 
 type ChatPopupProps = {
   open: boolean;
@@ -35,23 +37,11 @@ type ChatPopupProps = {
 };
 
 const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const [fullScreen, setFullScreen] = useState(false);
-  const { data: agentWalletBalance } = useBalance({
-    address: agentAddress,
-  });
   const prevChats = [
     { title: "What's the most effective way to use you" },
     { title: "Check my SEI balance" },
   ];
-  const promptSuggestions = [
-    "What Can I Do? 🤔",
-    "Get Trading Alpha 📈",
-    "Defi Execution ⚡",
-    "Defi Research 🔍",
-    "Goal-oriented Tasks 🎯",
-  ];
-
   return (
     <Popover open={open} onOpenChange={onOpenChange} modal={true}>
       <PopoverTrigger asChild>
@@ -66,146 +56,213 @@ const ChatPopup = ({ open, onOpenChange, agentAddress }: ChatPopupProps) => {
       <div
         className={`fixed inset-0 bg-black/50 ${open ? "" : "hidden"} z-10`}
       />
+
       {fullScreen && (
         <PopoverAnchor className="fixed top-0 left-0"></PopoverAnchor>
       )}
+
       <PopoverContent
-        className="w-screen md:w-md data-[fullscreen=true]:md:w-screen data-[fullscreen=true]:h-screen flex flex-col"
+        className="p-0 w-screen md:w-[calc(var(--sidebar-width)+28rem)] data-[fullscreen=true]:md:w-screen data-[fullscreen=true]:h-screen transition-all duration-200 flex"
         data-fullscreen={fullScreen}
       >
-        <div className="flex justify-between">
-          <div className="flex items-center gap-3">
-            <Sheet open={sidebarOpen} onOpenChange={setSidebarOpen}>
-              <SheetTrigger asChild>
-                <Menu className="size-6" />
-              </SheetTrigger>
-
-              <SheetContent side="left" className="p-4" showCloseButton={false}>
-                <SheetHeader className="sr-only">
-                  <SheetTitle>Agent Chat Sidebar</SheetTitle>
-                  <SheetDescription>Sidebar for agent chat</SheetDescription>
-                </SheetHeader>
-
-                <div className="flex justify-between items-center gap-4">
-                  <div className="relative">
-                    <Input placeholder="Search Chats" />
-                    <Search className="size-5 absolute right-2 top-[50%] translate-y-[-50%]" />
-                  </div>
-                  <SheetClose asChild>
-                    <button title="Close sidebar cursor-pointer">
-                      <PanelLeft className="size-6" />
-                    </button>
-                  </SheetClose>
-                </div>
-
-                <button className="w-full px-2 py-2 rounded-lg hover:bg-neutral-800 flex items-center gap-2 cursor-pointer">
-                  <MessageSquarePlus className="size-5" />
-                  <span>New Chat</span>
-                </button>
-                <div className="w-full h-0.25 bg-neutral-700" />
-
-                <div>
-                  <div className="flex flex-col gap-1">
-                    {prevChats.map((chat, idx) => (
-                      <div
-                        key={idx}
-                        className="w-full py-2 px-2 flex justify-between items-center gap-2 rounded-lg hover:bg-neutral-800 cursor-pointer"
-                      >
-                        <MessageSquare className="size-5 shrink-0" />
-                        <span className="flex-grow text-left whitespace-nowrap overflow-hidden text-ellipsis">
-                          {chat.title}
-                        </span>
-                        <Trash2 className="size-4 shrink-0" />
-                      </div>
-                    ))}
-                  </div>
-                  <p className="w-full mt-4 text-center text-xs font-light">
-                    {prevChats.length} chats loaded
-                  </p>
-                </div>
-              </SheetContent>
-            </Sheet>
-
-            <div className="flex gap-3 items-center">
-              <img src={pepeImg} alt="pepe" className="size-10 rounded-full" />
-              <div className="flex gap-0.5 flex-col">
-                <p className="font-medium">Moduls Agent</p>
-                <div className="flex items-center gap-1">
-                  <span className="font-mono">
-                    {ellipsizeAddress(agentAddress, 4, 2)}
-                  </span>
-                  <button
-                    className="cursor-pointer"
-                    onClick={() => writeToClipboard(agentAddress)}
-                  >
-                    <Copy className="size-4" />
-                  </button>
-                </div>
-              </div>
-            </div>
-
-            <div className="md:ml-2">
-              <div className="px-2 py-1 rounded-xl bg-neutral-700 text-sm">
-                <span>{agentWalletBalance?.value}</span> SEI
-              </div>
-            </div>
-          </div>
-
-          <div className="flex gap-2 md:gap-4 items-center">
-            <button
-              onClick={() => setFullScreen(!fullScreen)}
-              className="cursor-pointer"
-            >
-              {fullScreen ? (
-                <Minimize2 className="size-5" />
-              ) : (
-                <Maximize2 className="size-5" />
-              )}
-            </button>
-            <button
-              onClick={() => onOpenChange(false)}
-              className="cursor-pointer"
-            >
-              <X className="size-5" />
-            </button>
-          </div>
-        </div>
-
-        {/* separator line*/}
-        <div className="my-4 w-full h-0.25 bg-neutral-700" />
-
-        <div className="min-h-[60vh] flex-1 flex items-center justify-center">
-          <div className="max-w-md mx-auto">
-            <div className="px-4 flex flex-col gap-5 items-center justify-center">
-              <div className="">
-                <h2 className="text-xl font-semibold">
-                  What can I help you with?
-                </h2>
-              </div>
-              <div className="w-full">
-                <Textarea placeholder="Ask me anything" className="" />
-                <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium cursor-pointer">
-                  Start Chat
-                </button>
-              </div>
-            </div>
-
-            <div className="w-full mt-8 flex justify-center">
-              <div className="w-full p-4 flex justify-center flex-wrap gap-1.5">
-                {promptSuggestions.map((suggestion, idx) => (
-                  <button
-                    key={idx}
-                    className="px-2 py-1 bg-neutral-800 rounded-xl cursor-pointer"
-                  >
-                    {suggestion}
-                  </button>
-                ))}
-              </div>
-            </div>
-          </div>
-        </div>
+        <SidebarProvider
+          style={
+            {
+              "--sidebar-width": "16rem",
+              "--sidebar-width-mobile": "16rem",
+            } as CSSProperties
+          }
+          className="min-h-none"
+        >
+          <ChatSidebar
+            className={`${fullScreen || "group-data-[collapsible=offcanvas]:left-[calc(var(--sidebar-width)*1)] sgroup-data-[collapsible=offcanvas]:-z-10"}`}
+            prevChats={prevChats}
+          />
+          <Separator orientation="vertical" />
+          <SidebarInset className="md:peer-data-[variant=inset]:m-0 bg-inherit z-10">
+            <AgentChat
+              agentAddress={agentAddress}
+              fullScreen={fullScreen}
+              onFullScreenChange={setFullScreen}
+              onOpenChange={onOpenChange}
+            />
+          </SidebarInset>
+        </SidebarProvider>
       </PopoverContent>
     </Popover>
+  );
+};
+
+type ChatSidebarProps = {
+  prevChats: { title: string }[];
+  className?: string;
+};
+const ChatSidebar = ({ prevChats, className }: ChatSidebarProps) => {
+  const isMobile = useIsMobile();
+
+  return (
+    <Sidebar
+      variant={isMobile ? "sidebar" : "inset"}
+      className={cn(`${isMobile ? "" : "h-auto sw-3xs"}`, className)}
+    >
+      <SidebarHeader>
+        <div className="flex justify-between items-center gap-4">
+          <div className="relative">
+            <Input placeholder="Search Chats" />
+            <Search className="size-5 absolute right-2 top-[50%] translate-y-[-50%]" />
+          </div>
+        </div>
+      </SidebarHeader>
+      <SidebarContent>
+        <SidebarGroup>
+          <button className="w-full px-2 py-2 rounded-lg hover:bg-neutral-800 flex items-center gap-2 cursor-pointer">
+            <MessageSquarePlus className="size-5" />
+            <span>New Chat</span>
+          </button>
+        </SidebarGroup>
+        <SidebarSeparator />
+        <SidebarGroup>
+          <div>
+            <div className="flex flex-col gap-1">
+              {prevChats.map((chat, idx) => (
+                <div
+                  key={idx}
+                  className="w-full py-2 px-2 flex justify-between items-center gap-2 rounded-lg hover:bg-neutral-800 cursor-pointer"
+                >
+                  <MessageSquare className="size-5 shrink-0" />
+                  <span className="flex-grow text-left whitespace-nowrap overflow-hidden text-ellipsis">
+                    {chat.title}
+                  </span>
+                  <Trash2 className="size-4 shrink-0" />
+                </div>
+              ))}
+            </div>
+            <p className="w-full mt-4 text-center text-xs font-light">
+              {prevChats.length} chats loaded
+            </p>
+          </div>
+        </SidebarGroup>
+      </SidebarContent>
+    </Sidebar>
+  );
+};
+
+type AgentChatProps = {
+  agentAddress: `0x${string}`;
+  fullScreen: boolean;
+  onFullScreenChange: (fullScreen: boolean) => void;
+  onOpenChange: (open: boolean) => void;
+};
+const AgentChat = ({
+  agentAddress,
+  fullScreen,
+  onFullScreenChange,
+  onOpenChange,
+}: AgentChatProps) => {
+  const { toggleSidebar } = useSidebar();
+  const isMobile = useIsMobile();
+
+  const { data: agentWalletBalance } = useBalance({
+    address: agentAddress,
+  });
+
+  const promptSuggestions = [
+    "What Can I Do? 🤔",
+    "Get Trading Alpha 📈",
+    "Defi Execution ⚡",
+    "Defi Research 🔍",
+    "Goal-oriented Tasks 🎯",
+  ];
+
+  return (
+    <main className="p-2 flex flex-col flex-1">
+      <div className="px-1 py-1 flex justify-between">
+        <div className="flex items-center gap-3">
+          <button className="cursor-pointer" onClick={toggleSidebar}>
+            <PanelLeft className="size-6" />
+          </button>
+
+          <div className="flex gap-3 items-center">
+            <img src={pepeImg} alt="pepe" className="size-10 rounded-full" />
+            <div className="flex gap-0.5 flex-col">
+              <p className="font-medium">Moduls Agent</p>
+              <div className="flex items-center gap-1">
+                <span className="font-mono">
+                  {isMobile
+                    ? ellipsizeAddress(agentAddress, 4, 2)
+                    : ellipsizeAddress(agentAddress)}
+                </span>
+                <button
+                  className="cursor-pointer"
+                  onClick={() => writeToClipboard(agentAddress)}
+                >
+                  <Copy className="size-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="md:ml-2">
+            <div className="px-2 py-1 rounded-xl bg-neutral-700 text-sm">
+              <span>{agentWalletBalance?.value}</span> SEI
+            </div>
+          </div>
+        </div>
+
+        <div className="flex gap-2 md:gap-4 items-center">
+          <button
+            onClick={() => onFullScreenChange(!fullScreen)}
+            className="cursor-pointer"
+          >
+            {fullScreen ? (
+              <Minimize2 className="size-5" />
+            ) : (
+              <Maximize2 className="size-5" />
+            )}
+          </button>
+          <button
+            onClick={() => onOpenChange(false)}
+            className="cursor-pointer"
+          >
+            <X className="size-5" />
+          </button>
+        </div>
+      </div>
+
+      {/* separator line*/}
+      <Separator className="my-2" />
+
+      <div className="min-h-[45vh] flex-1 flex items-center justify-center">
+        <div className="max-w-md mx-auto">
+          <div className="px-4 flex flex-col gap-5 items-center justify-center">
+            <div className="">
+              <h2 className="text-xl font-semibold">
+                What can I help you with?
+              </h2>
+            </div>
+            <div className="w-full">
+              <Textarea placeholder="Ask me anything" className="" />
+              <button className="w-full mt-3 py-2 bg-accent rounded-lg font-medium cursor-pointer">
+                Start Chat
+              </button>
+            </div>
+          </div>
+
+          <div className="w-full mt-8 flex justify-center">
+            <div className="w-full p-4 flex justify-center flex-wrap gap-1.5">
+              {promptSuggestions.map((suggestion, idx) => (
+                <button
+                  key={idx}
+                  className="px-2 py-1 bg-neutral-800 rounded-xl cursor-pointer"
+                >
+                  {suggestion}
+                </button>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
   );
 };
 
