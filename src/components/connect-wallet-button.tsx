@@ -22,7 +22,11 @@ import { useIsMobile } from "@/hooks";
 import metamaskIcon from "../assets/icons/metamask.svg";
 import trustwalletIcon from "../assets/icons/trustwallet.svg";
 import avatarImage from "../assets/avatar.svg";
-import { ellipsizeAddress, writeToClipboard } from "@/lib/utils";
+import {
+  ellipsizeAddress,
+  formatBigIntToUnits,
+  writeToClipboard,
+} from "@/lib/utils";
 import { toast } from "sonner";
 
 const connectorIcons = new Map<string, string>([
@@ -68,6 +72,9 @@ const ConnectWalletButton = () => {
   };
 
   const { data: walletBalance } = useBalance({ address });
+  const formattedWalletBalance = !!walletBalance
+    ? formatBigIntToUnits(walletBalance.value, walletBalance.decimals)
+    : "-";
 
   return (
     <>
@@ -134,7 +141,7 @@ const ConnectWalletButton = () => {
                       </button>
                     </div>
                     <div className="px-2 py-0.5 rounded-lg bg-neutral-800 font-medium">
-                      <span>{walletBalance?.value}</span> <span>SEI</span>
+                      <span>{formattedWalletBalance}</span> <span>SEI</span>
                     </div>
                   </div>
                 </div>

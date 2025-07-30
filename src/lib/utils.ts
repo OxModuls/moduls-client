@@ -58,3 +58,24 @@ export const writeToClipboard = async (text: string) => {
     toast.error(error.message);
   }
 };
+
+export function formatBigIntToUnits(rawValue: bigint, decimals: number) {
+  if (decimals === 0) {
+    return rawValue.toString();
+  }
+
+  const divisor = BigInt(10) ** BigInt(decimals);
+  const wholeUnits = rawValue / divisor;
+  let fractionalPart = rawValue % divisor;
+
+  let fractionalString = fractionalPart.toString().padStart(decimals, "0");
+  fractionalString = fractionalString.replace(/0+$/, "");
+
+  if (fractionalString === "") {
+    fractionalString = "0";
+  }
+
+  return `${wholeUnits.toString()}.${fractionalString}`
+    .replace(/\.0+$/, "")
+    .replace(/\.$/, "");
+}
