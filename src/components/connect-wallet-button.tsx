@@ -30,6 +30,13 @@ import { toast } from "sonner";
 import { Popover, PopoverTrigger } from "./ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
 import { Separator } from "./ui/separator";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "./ui/dialog";
 
 const connectorIcons = new Map<string, string>([
   ["metaMaskSDK", metamaskIcon],
@@ -42,7 +49,12 @@ const ConnectWalletButton = () => {
 
   return (
     <>
-      <Drawer open={drawerOpen} onOpenChange={setDrawerOpen} direction="bottom">
+      <Drawer
+        open={drawerOpen}
+        onOpenChange={setDrawerOpen}
+        autoFocus={drawerOpen}
+        direction="bottom"
+      >
         <DrawerTrigger className="md:hidden cursor-pointer">
           <Trigger />
         </DrawerTrigger>
@@ -112,6 +124,8 @@ const Content = ({
   const { address, isConnected, connector: activeConnector } = useAccount();
   const { disconnect } = useDisconnect();
   const { connect, connectors } = useConnect();
+  const [profileDialogOpen, setProfileDialogOpen] = useState(false);
+  const [portfolioDialogOpen, setPortfolioDialogOpen] = useState(false);
 
   const connectWallet = async (connector: Connector) => {
     try {
@@ -148,8 +162,16 @@ const Content = ({
     : "-";
 
   const menuItems = [
-    { title: "Profile", icon: User },
-    { title: "Portfolio", icon: BriefcaseBusiness },
+    {
+      title: "Profile",
+      icon: User,
+      onClick: () => setProfileDialogOpen((prev) => !prev),
+    },
+    {
+      title: "Portfolio",
+      icon: BriefcaseBusiness,
+      onClick: () => setPortfolioDialogOpen((prev) => !prev),
+    },
     { title: "Disconnect", icon: Power, onClick: disconnectWallet },
   ];
 
@@ -209,6 +231,16 @@ const Content = ({
             </Fragment>
           ))}
         </div>
+
+        <ProfileDialog
+          open={profileDialogOpen}
+          onOpenChange={setProfileDialogOpen}
+        />
+
+        <PortfolioDialog
+          open={portfolioDialogOpen}
+          onOpenChange={setPortfolioDialogOpen}
+        />
       </div>
     );
 
@@ -232,6 +264,44 @@ const Content = ({
         ))}
       </div>
     </div>
+  );
+};
+
+type ProfileDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent showCloseButton={true}>
+        <DialogHeader>
+          <DialogTitle>Profile</DialogTitle>
+          <DialogDescription className="sr-only">
+            View your profile
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
+  );
+};
+
+type PortfolioDialogProps = {
+  open: boolean;
+  onOpenChange: (open: boolean) => void;
+};
+const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
+  return (
+    <Dialog open={open} onOpenChange={onOpenChange}>
+      <DialogContent showCloseButton={true}>
+        <DialogHeader>
+          <DialogTitle>Portfolio</DialogTitle>
+          <DialogDescription className="sr-only">
+            View your portfolio
+          </DialogDescription>
+        </DialogHeader>
+      </DialogContent>
+    </Dialog>
   );
 };
 
