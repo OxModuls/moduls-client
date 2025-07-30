@@ -506,30 +506,30 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
               >
                 <div className="mt-2 pr-2 flex flex-col gap-2">
                   {tokenHoldings.reverse().map((token, idx) => (
-                    <div
-                      key={idx}
-                      className="px-4 py-2 flex justify-between bg-primary-foreground border rounded-xl"
-                    >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={pepeImg}
-                          alt=""
-                          className="size-8 rounded-full border border-neutral-500"
-                        />
-                        <div className="flex flex-col items-start text-sm">
-                          <span className="">{token.tokenName}</span>
+                    <Fragment key={idx}>
+                      <div className="px-4 py-2 flex justify-between rounded-xl">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={pepeImg}
+                            alt=""
+                            className="size-8 rounded-full border border-neutral-500"
+                          />
+                          <div className="flex flex-col items-start text-sm">
+                            <span className="">{token.tokenName}</span>
+                            <span className="text-neutral-500">
+                              {token.symbol}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end text-sm">
+                          <span className="">${token.usdValue}</span>
                           <span className="text-neutral-500">
-                            {token.symbol}
+                            {token.amount} {token.symbol}
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end text-sm">
-                        <span className="">${token.usdValue}</span>
-                        <span className="text-neutral-500">
-                          {token.amount} {token.symbol}
-                        </span>
-                      </div>
-                    </div>
+                      {idx + 1 < tokenHoldings.length && <Separator />}
+                    </Fragment>
                   ))}
                 </div>
               </TabsContent>
