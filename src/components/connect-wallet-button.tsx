@@ -40,6 +40,7 @@ import {
 import { Textarea } from "./ui/textarea";
 import { FaTelegram, FaXTwitter } from "react-icons/fa6";
 import { Input } from "./ui/input";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
 
 const connectorIcons = new Map<string, string>([
   ["metaMaskSDK", metamaskIcon],
@@ -282,7 +283,7 @@ type ProfileDialogProps = {
 const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={true}>
+      <DialogContent showCloseButton={true} className="md:w-sm">
         <DialogHeader>
           <DialogTitle>Profile</DialogTitle>
           <DialogDescription className="sr-only">
@@ -441,38 +442,91 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
 
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
-      <DialogContent showCloseButton={true}>
+      <DialogContent showCloseButton={true} className="md:w-sm">
         <DialogHeader>
           <DialogTitle>Portfolio</DialogTitle>
           <DialogDescription className="sr-only">
             View your portfolio
           </DialogDescription>
-          <div className="mt-4">
-            <div className="flex flex-col gap-4 max-h-[50vh] overflow-y-auto">
-              {tokenHoldings.map((token, idx) => (
-                <div key={idx} className="flex justify-between">
-                  <div className="flex items-center gap-2">
-                    <img
-                      src={token.logoUrl}
-                      alt=""
-                      className="size-10 rounded-full"
-                    />
-                    <div className="flex flex-col items-start">
-                      <span className="font-semibold">{token.symbol}</span>
-                      <span className="text-sm font-light">
-                        {token.tokenName}
-                      </span>
+          <Separator className="my-2" />
+          <div className="">
+            <Tabs>
+              <TabsList>
+                <TabsTrigger
+                  value="bought"
+                  className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+                >
+                  Bought
+                </TabsTrigger>
+                <TabsTrigger
+                  value="created"
+                  className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+                >
+                  Created
+                </TabsTrigger>
+              </TabsList>
+
+              <TabsContent
+                value="bought"
+                className="min-h-96 max-h-96 overflow-y-auto"
+              >
+                <div className="pr-2 flex flex-col gap-4">
+                  {tokenHoldings.map((token, idx) => (
+                    <div key={idx} className="flex justify-between">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={token.logoUrl}
+                          alt=""
+                          className="size-10 rounded-full"
+                        />
+                        <div className="flex flex-col items-start">
+                          <span className="font-semibold">{token.symbol}</span>
+                          <span className="text-sm font-light">
+                            {token.tokenName}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-semibold">${token.usdValue}</span>
+                        <span className="text-sm font-light">
+                          {token.amount} {token.symbol}
+                        </span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex flex-col items-end">
-                    <span className="font-semibold">${token.usdValue}</span>
-                    <span className="text-sm font-light">
-                      {token.amount} {token.symbol}
-                    </span>
-                  </div>
+                  ))}
                 </div>
-              ))}
-            </div>
+              </TabsContent>
+              <TabsContent
+                value="created"
+                className="min-h-96 max-h-96 overflow-y-auto"
+              >
+                <div className="pr-2 flex flex-col gap-4">
+                  {tokenHoldings.map((token, idx) => (
+                    <div key={idx} className="flex justify-between">
+                      <div className="flex items-center gap-2">
+                        <img
+                          src={token.logoUrl}
+                          alt=""
+                          className="size-10 rounded-full"
+                        />
+                        <div className="flex flex-col items-start">
+                          <span className="font-semibold">{token.symbol}</span>
+                          <span className="text-sm font-light">
+                            {token.tokenName}
+                          </span>
+                        </div>
+                      </div>
+                      <div className="flex flex-col items-end">
+                        <span className="font-semibold">${token.usdValue}</span>
+                        <span className="text-sm font-light">
+                          {token.amount} {token.symbol}
+                        </span>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              </TabsContent>
+            </Tabs>
           </div>
         </DialogHeader>
       </DialogContent>
