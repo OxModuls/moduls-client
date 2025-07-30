@@ -452,16 +452,16 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
           <Separator className="my-2" />
           <div className="">
             <Tabs>
-              <TabsList>
+              <TabsList className="w-full bg-inherit">
                 <TabsTrigger
                   value="bought"
-                  className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+                  className="w-auto h-auto flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-28 after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
                 >
                   Bought
                 </TabsTrigger>
                 <TabsTrigger
                   value="created"
-                  className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
+                  className="w-auto h-auto flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-28 after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
                 >
                   Created
                 </TabsTrigger>
@@ -473,30 +473,30 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
               >
                 <div className="mt-2 pr-2 flex flex-col gap-2">
                   {tokenHoldings.map((token, idx) => (
-                    <div
-                      key={idx}
-                      className="px-4 py-2 flex justify-between bg-primary-foreground border rounded-xl"
-                    >
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={pepeImg}
-                          alt=""
-                          className="size-8 rounded-full border border-neutral-500"
-                        />
-                        <div className="flex flex-col items-start text-sm">
-                          <span className="">{token.tokenName}</span>
+                    <Fragment key={idx}>
+                      <div className="px-4 py-2 flex justify-between rounded-xl">
+                        <div className="flex items-center gap-2">
+                          <img
+                            src={pepeImg}
+                            alt=""
+                            className="size-8 rounded-full border border-neutral-500"
+                          />
+                          <div className="flex flex-col items-start text-sm">
+                            <span className="">{token.tokenName}</span>
+                            <span className="text-neutral-500">
+                              {token.symbol}
+                            </span>
+                          </div>
+                        </div>
+                        <div className="flex flex-col items-end text-sm">
+                          <span className="">${token.usdValue}</span>
                           <span className="text-neutral-500">
-                            {token.symbol}
+                            {token.amount} {token.symbol}
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end text-sm">
-                        <span className="">${token.usdValue}</span>
-                        <span className="text-neutral-500">
-                          {token.amount} {token.symbol}
-                        </span>
-                      </div>
-                    </div>
+                      {idx + 1 < tokenHoldings.length && <Separator />}
+                    </Fragment>
                   ))}
                 </div>
               </TabsContent>
