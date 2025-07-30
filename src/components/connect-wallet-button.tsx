@@ -41,6 +41,7 @@ import { Textarea } from "./ui/textarea";
 import { FaTelegram, FaXTwitter } from "react-icons/fa6";
 import { Input } from "./ui/input";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "./ui/tabs";
+import pepeImg from "../assets/images/pepe1.png";
 
 const connectorIcons = new Map<string, string>([
   ["metaMaskSDK", metamaskIcon],
@@ -470,25 +471,28 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
                 value="bought"
                 className="min-h-96 max-h-96 overflow-y-auto"
               >
-                <div className="pr-2 flex flex-col gap-4">
+                <div className="mt-2 pr-2 flex flex-col gap-2">
                   {tokenHoldings.map((token, idx) => (
-                    <div key={idx} className="flex justify-between">
+                    <div
+                      key={idx}
+                      className="px-4 py-2 flex justify-between bg-primary-foreground border rounded-xl"
+                    >
                       <div className="flex items-center gap-2">
                         <img
-                          src={token.logoUrl}
+                          src={pepeImg}
                           alt=""
-                          className="size-10 rounded-full"
+                          className="size-8 rounded-full border border-neutral-500"
                         />
-                        <div className="flex flex-col items-start">
-                          <span className="font-semibold">{token.symbol}</span>
-                          <span className="text-sm font-light">
-                            {token.tokenName}
+                        <div className="flex flex-col items-start text-sm">
+                          <span className="">{token.tokenName}</span>
+                          <span className="text-neutral-500">
+                            {token.symbol}
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end">
-                        <span className="font-semibold">${token.usdValue}</span>
-                        <span className="text-sm font-light">
+                      <div className="flex flex-col items-end text-sm">
+                        <span className="">${token.usdValue}</span>
+                        <span className="text-neutral-500">
                           {token.amount} {token.symbol}
                         </span>
                       </div>
@@ -500,25 +504,28 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
                 value="created"
                 className="min-h-96 max-h-96 overflow-y-auto"
               >
-                <div className="pr-2 flex flex-col gap-4">
-                  {tokenHoldings.map((token, idx) => (
-                    <div key={idx} className="flex justify-between">
+                <div className="mt-2 pr-2 flex flex-col gap-2">
+                  {tokenHoldings.reverse().map((token, idx) => (
+                    <div
+                      key={idx}
+                      className="px-4 py-2 flex justify-between bg-primary-foreground border rounded-xl"
+                    >
                       <div className="flex items-center gap-2">
                         <img
-                          src={token.logoUrl}
+                          src={pepeImg}
                           alt=""
-                          className="size-10 rounded-full"
+                          className="size-8 rounded-full border border-neutral-500"
                         />
-                        <div className="flex flex-col items-start">
-                          <span className="font-semibold">{token.symbol}</span>
-                          <span className="text-sm font-light">
-                            {token.tokenName}
+                        <div className="flex flex-col items-start text-sm">
+                          <span className="">{token.tokenName}</span>
+                          <span className="text-neutral-500">
+                            {token.symbol}
                           </span>
                         </div>
                       </div>
-                      <div className="flex flex-col items-end">
-                        <span className="font-semibold">${token.usdValue}</span>
-                        <span className="text-sm font-light">
+                      <div className="flex flex-col items-end text-sm">
+                        <span className="">${token.usdValue}</span>
+                        <span className="text-neutral-500">
                           {token.amount} {token.symbol}
                         </span>
                       </div>
