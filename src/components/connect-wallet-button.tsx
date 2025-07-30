@@ -16,7 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { BriefcaseBusiness, Copy, Power, User } from "lucide-react";
+import { BriefcaseBusiness, Camera, Copy, Power, User } from "lucide-react";
 
 import metamaskIcon from "../assets/icons/metamask.svg";
 import trustwalletIcon from "../assets/icons/trustwallet.svg";
@@ -27,16 +27,20 @@ import {
   writeToClipboard,
 } from "@/lib/utils";
 import { toast } from "sonner";
-import { Popover, PopoverTrigger } from "./ui/popover";
-import { PopoverContent } from "@radix-ui/react-popover";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
 import { Separator } from "./ui/separator";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
+  DialogFooter,
   DialogHeader,
   DialogTitle,
 } from "./ui/dialog";
+import { Avatar } from "./ui/avatar";
+import { Textarea } from "./ui/textarea";
+import { FaTelegram, FaXTwitter } from "react-icons/fa6";
+import { Input } from "./ui/input";
 
 const connectorIcons = new Map<string, string>([
   ["metaMaskSDK", metamaskIcon],
@@ -49,6 +53,7 @@ const ConnectWalletButton = () => {
 
   return (
     <>
+      {/* use drawer on mobile*/}
       <Drawer
         open={drawerOpen}
         onOpenChange={setDrawerOpen}
@@ -74,6 +79,7 @@ const ConnectWalletButton = () => {
         </DrawerContent>
       </Drawer>
 
+      {/* use popover on desktop */}
       <Popover open={popoverOpen} onOpenChange={setPopoverOpen}>
         <PopoverTrigger className="hidden md:block cursor-pointer">
           <Trigger />
@@ -278,9 +284,65 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
         <DialogHeader>
           <DialogTitle>Profile</DialogTitle>
           <DialogDescription className="sr-only">
-            View your profile
+            Update your profile
           </DialogDescription>
         </DialogHeader>
+        <div className="mt-4 flex flex-col gap-2">
+          <div className="w-full flex justify-center">
+            <div className="relative">
+              <Avatar className="size-20 border-2 border-accent" />
+              <Camera className="size-6 absolute right-1 bottom-1" />
+            </div>
+          </div>
+          <div className="">
+            <label htmlFor="bio" className="ml-1 font-medium">
+              Bio
+            </label>
+            <Textarea
+              id="bio"
+              placeholder="Describe yourself"
+              className="mt-1"
+            />
+            <button className="mt-2 px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+              Save
+            </button>
+          </div>
+
+          <p className="mt-4 text-lg font-medium">Social Links</p>
+          <div className="flex flex-col gap-4">
+            <div className="">
+              <label
+                htmlFor="x"
+                className="ml-1 font-medium flex items-center gap-2"
+              >
+                <FaXTwitter />
+                <span>X/Twitter</span>
+              </label>
+              <div className="mt-1 w-full flex items-center gap-2">
+                <Input id="x" placeholder="X URL" className="" />
+                <button className="px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+                  Save
+                </button>
+              </div>
+            </div>
+            <div className="">
+              <label
+                htmlFor="telegram"
+                className="ml-1 font-medium flex items-center gap-2"
+              >
+                <FaTelegram />
+                <span>Telegram</span>
+              </label>
+              <div className="mt-1 w-full flex items-center gap-2">
+                <Input id="telegram" placeholder="X URL" className="" />
+                <button className="px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+                  Save
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <DialogFooter className="h-4"></DialogFooter>
       </DialogContent>
     </Dialog>
   );
