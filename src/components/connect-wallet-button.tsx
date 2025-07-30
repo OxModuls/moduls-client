@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   useAccount,
   useBalance,
@@ -16,7 +16,7 @@ import {
   DrawerTitle,
   DrawerTrigger,
 } from "@/components/ui/drawer";
-import { Copy, Power } from "lucide-react";
+import { BriefcaseBusiness, Copy, Power, User } from "lucide-react";
 
 import metamaskIcon from "../assets/icons/metamask.svg";
 import trustwalletIcon from "../assets/icons/trustwallet.svg";
@@ -29,6 +29,7 @@ import {
 import { toast } from "sonner";
 import { Popover, PopoverTrigger } from "./ui/popover";
 import { PopoverContent } from "@radix-ui/react-popover";
+import { Separator } from "./ui/separator";
 
 const connectorIcons = new Map<string, string>([
   ["metaMaskSDK", metamaskIcon],
@@ -65,7 +66,7 @@ const ConnectWalletButton = () => {
         <PopoverTrigger className="hidden md:block cursor-pointer">
           <Trigger />
         </PopoverTrigger>
-        <PopoverContent className="hidden md:block mt-1 w-xs min-h-72 py-4 bg-background rounded-lg border z-10">
+        <PopoverContent className="hidden md:block mt-1 w-xs py-4 bg-background rounded-lg border z-10">
           <Content onOpenChange={setPopoverOpen} />
         </PopoverContent>
       </Popover>
@@ -146,6 +147,12 @@ const Content = ({
     ? formatBigIntToUnits(walletBalance.value, walletBalance.decimals)
     : "-";
 
+  const menuItems = [
+    { title: "Profile", icon: User },
+    { title: "Portfolio", icon: BriefcaseBusiness },
+    { title: "Disconnect", icon: Power, onClick: disconnectWallet },
+  ];
+
   if (isConnected)
     return (
       <div className="px-4">
@@ -183,9 +190,24 @@ const Content = ({
               </div>
             </div>
           </div>
-          <button className="cursor-pointer mt-1" onClick={disconnectWallet}>
-            <Power className="size-5" />
-          </button>
+        </div>
+
+        <Separator className="mt-4" />
+
+        <div className="py-2 flex flex-col gap-1">
+          {menuItems.map((item, idx, items) => (
+            <Fragment key={idx}>
+              <button
+                key={idx}
+                className="w-full px-2 py-2 flex items-center gap-4 hover:bg-neutral-800 rounded-lg cursor-pointer"
+                onClick={item.onClick}
+              >
+                <item.icon className="size-6" />
+                <span className="">{item.title}</span>
+              </button>
+              {idx + 1 < items.length && <Separator className="" />}
+            </Fragment>
+          ))}
         </div>
       </div>
     );
