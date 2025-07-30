@@ -19,6 +19,7 @@ import {
   MessageSquarePlus,
   Minimize2,
   PanelLeft,
+  PanelLeftClose,
   Search,
   Trash2,
   X,
@@ -159,7 +160,7 @@ const AgentChat = ({
   onFullScreenChange,
   onOpenChange,
 }: AgentChatProps) => {
-  const { toggleSidebar } = useSidebar();
+  const { open, toggleSidebar } = useSidebar();
   const isMobile = useIsMobile();
 
   const { data: agentWalletBalance } = useBalance({
@@ -179,7 +180,11 @@ const AgentChat = ({
       <div className="px-1 py-1 flex justify-between">
         <div className="flex items-center gap-3">
           <button className="cursor-pointer" onClick={toggleSidebar}>
-            <PanelLeft className="size-6" />
+            {open ? (
+              <PanelLeftClose className="size-6" />
+            ) : (
+              <PanelLeft className="size-6" />
+            )}
           </button>
 
           <div className="flex gap-3 items-center">
