@@ -429,21 +429,21 @@ const Token = () => {
               className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <Info className="size-5" />
-              <h2 className="text-base font-semibold">About</h2>
+              <h2 className="text-base">About</h2>
             </TabsTrigger>
             <TabsTrigger
               value="trade"
               className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <BadgeDollarSign className="size-5" />
-              <h2 className="text-base font-semibold">Buy/Sell</h2>
+              <h2 className="text-base">Buy/Sell</h2>
             </TabsTrigger>
             <TabsTrigger
               value="holders"
               className="w-auto h-auto flex items-center gap-2 cursor-pointer data-[state=active]:text-accent dark:data-[state=active]:text-accent"
             >
               <UserRound className="size-5" />
-              <h2 className="text-base font-semibold">Holders</h2>
+              <h2 className="text-base">Holders</h2>
             </TabsTrigger>
           </TabsList>
 
@@ -605,7 +605,7 @@ const Token = () => {
                   </div>
                   <div>
                     <button
-                      className={`py-2 w-full capitalize rounded-lg font-semibold cursor-pointer ${activeTradeTab === "buy" ? "bg-green-600" : "bg-red-600"}`}
+                      className={`py-2 w-full capitalize rounded-lg cursor-pointer ${activeTradeTab === "buy" ? "bg-green-600" : "bg-red-600"}`}
                     >
                       {activeTradeTab}
                     </button>

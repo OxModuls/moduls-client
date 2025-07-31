@@ -383,7 +383,7 @@ const CreateAgent = () => {
             </div>
             <div className="mt-2 flex justify-end">
               <button
-                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                className="px-3 py-2 bg-accent rounded-lg hover:scale-105 transition-all duration-500 flex items-center gap-2"
                 onClick={() =>
                   pickModulDivRef.current &&
                   pickModulDivRef.current.scrollIntoView({
@@ -444,7 +444,7 @@ const CreateAgent = () => {
             </div>
             <div className="mt-2 flex justify-end">
               <button
-                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                className="px-3 py-2 bg-accent rounded-lg hover:scale-105 transition-all duration-500 flex items-center gap-2"
                 onClick={() =>
                   taxSettingsDivRef.current &&
                   taxSettingsDivRef.current.scrollIntoView({
@@ -493,7 +493,6 @@ const CreateAgent = () => {
                         tax: { ...formData.tax, swap: value[0] },
                       })
                     }
-                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>2%</span>
@@ -531,7 +530,6 @@ const CreateAgent = () => {
                         },
                       })
                     }
-                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>1%</span>
@@ -572,7 +570,6 @@ const CreateAgent = () => {
                         },
                       })
                     }
-                    disabled
                   />
                   <div className="w-full mt-1 px-1 flex justify-between text-xs text-muted-foreground">
                     <span>0%</span>
@@ -629,7 +626,7 @@ const CreateAgent = () => {
 
             <div className="mt-2 flex justify-end">
               <button
-                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 flex items-center gap-2"
+                className="px-3 py-2 bg-accent rounded-lg hover:scale-105 transition-all duration-500 flex items-center gap-2"
                 onClick={() =>
                   prebuyDivRef.current &&
                   prebuyDivRef.current.scrollIntoView({
@@ -717,7 +714,7 @@ const CreateAgent = () => {
             </div>
             <div className="mt-4 flex justify-end gap-2">
               <button
-                className="px-3 py-2 bg-accent rounded-lg text-sm font-semibold hover:scale-105 transition-all duration-500 text-center"
+                className="px-3 py-2 bg-accent rounded-lg hover:scale-105 transition-all duration-500 text-center"
                 onClick={() => {}}
               >
                 Launch Agent

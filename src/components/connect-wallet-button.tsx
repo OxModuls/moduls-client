@@ -120,7 +120,7 @@ const Trigger = () => {
     );
 
   return (
-    <div className="px-3 py-2 bg-accent rounded-xl font-bold transition-all duration-500 hover:scale-105 cursor-pointer">
+    <div className="px-4 py-2 bg-accent rounded-xl transition-all duration-500 hover:scale-105 cursor-pointer">
       Connect
     </div>
   );
@@ -291,7 +291,8 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
             Update your profile
           </DialogDescription>
         </DialogHeader>
-        <div className="mt-4 flex flex-col gap-2">
+        <Separator className="my-2" />
+        <div className="mt-2 flex flex-col gap-2">
           <div className="w-full flex justify-center">
             <div className="relative">
               <div className="size-24 rounded-full border-2 border-accent" />
@@ -307,7 +308,7 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
               placeholder="Describe yourself"
               className="mt-1"
             />
-            <button className="mt-2 px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+            <button className="mt-2 px-3 py-1 bg-accent rounded-md cursor-pointer">
               Save
             </button>
           </div>
@@ -323,8 +324,12 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
                 <span>X/Twitter</span>
               </label>
               <div className="mt-1 w-full flex items-center gap-2">
-                <Input id="x" placeholder="X URL" className="" />
-                <button className="px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+                <Input
+                  id="x"
+                  placeholder="X URL"
+                  className="placeholder:text-base"
+                />
+                <button className="px-3 py-1 bg-accent rounded-md cursor-pointer">
                   Save
                 </button>
               </div>
@@ -338,8 +343,12 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
                 <span>Telegram</span>
               </label>
               <div className="mt-1 w-full flex items-center gap-2">
-                <Input id="telegram" placeholder="X URL" className="" />
-                <button className="px-3 py-1 bg-accent font-semibold rounded-md cursor-pointer">
+                <Input
+                  id="telegram"
+                  placeholder="Telegram URL"
+                  className="placeholder:text-base"
+                />
+                <button className="px-3 py-1 bg-accent rounded-md cursor-pointer">
                   Save
                 </button>
               </div>
@@ -450,20 +459,20 @@ const PortfolioDialog = ({ open, onOpenChange }: PortfolioDialogProps) => {
             View your portfolio
           </DialogDescription>
           <Separator className="my-2" />
-          <div className="">
+          <div className="mt-2">
             <Tabs>
               <TabsList className="w-full bg-inherit">
                 <TabsTrigger
                   value="bought"
-                  className="w-auto h-auto flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-28 after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
+                  className="text-base flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-[80%] after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
                 >
-                  Bought
+                  Holdings
                 </TabsTrigger>
                 <TabsTrigger
                   value="created"
-                  className="w-auto h-auto flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-28 after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
+                  className="text-base flex items-center gap-2 cursor-pointer border-accent border-none data-[state=active]:border-none dark:data-[state=active]:bg-inherit dark:data-[state=active]:text-accent relative after:content-[''] after:absolute after:bottom-0 after:left-[50%] after:translate-x-[-50%] after:w-[80%] after:h-0.5 after:bg-inherit data-[state=active]:after:bg-accent"
                 >
-                  Created
+                  Agents Created
                 </TabsTrigger>
               </TabsList>
 
