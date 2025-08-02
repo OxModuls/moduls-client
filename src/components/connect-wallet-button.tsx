@@ -281,7 +281,37 @@ type ProfileDialogProps = {
   open: boolean;
   onOpenChange: (open: boolean) => void;
 };
+
+const acceptedImageFormats = [
+  "image/jpeg",
+  "image/jpg",
+  "image/png",
+  "application/gif",
+];
+const maxImageSize = 5 * 1024 * 1024;
+
 const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
+  const [profilePic, setProfilePic] = useState<File | undefined>();
+  const [profilePicUrl, setProfilePicURL] = useState<string | undefined>();
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files![0];
+
+    if (
+      file &&
+      acceptedImageFormats.includes(file.type) &&
+      file.size < maxImageSize
+    ) {
+      setProfilePic(file);
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setProfilePicURL(reader.result as string);
+      };
+      reader.readAsDataURL(file);
+      toast.success("Added image successfully");
+    }
+  };
+
   return (
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent showCloseButton={true} className="md:w-sm">
@@ -295,8 +325,26 @@ const ProfileDialog = ({ open, onOpenChange }: ProfileDialogProps) => {
         <div className="mt-2 flex flex-col gap-2">
           <div className="w-full flex justify-center">
             <div className="relative">
-              <div className="size-24 rounded-full border-2 border-accent" />
-              <Camera className="size-6 absolute right-1 bottom-1" />
+              <label
+                htmlFor="profile-pic"
+                className="block size-24 rounded-full border-2 border-accent"
+              >
+                {profilePic && (
+                  <img
+                    src={profilePicUrl}
+                    alt="profile pic"
+                    className="size-full rounded-full object-cover"
+                  />
+                )}
+                <input
+                  type="file"
+                  id="profile-pic"
+                  name="profilePic"
+                  className="sr-only"
+                  onChange={handleFileChange}
+                />
+                <Camera className="size-6 absolute right-1 bottom-1" />
+              </label>
             </div>
           </div>
           <div className="">
